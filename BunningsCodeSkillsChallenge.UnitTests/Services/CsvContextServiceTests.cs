@@ -1,4 +1,4 @@
-﻿namespace BunningsCodeSkillsChallenge.UnitTests
+﻿namespace BunningsCodeSkillsChallenge.UnitTests.Services
 {
     using System.Linq;
     using Domain.Services;
