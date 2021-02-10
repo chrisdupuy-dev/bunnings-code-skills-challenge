@@ -10,47 +10,37 @@
         public IEnumerable<CommonCatalog> GetCommonCatalog(IEnumerable<Company> companies)
         {
             var commonCatalogs = new List<CommonCatalog>();
+            var skusTooIgnore = new HashSet<int>();
 
-            var companyA = companies.First();
-            var companyB = companies.Last();
-
-            var supplierProductBarcodesA = companyA.SupplierProductBarcodes.GroupBy(_ => _.SKU);
-            var supplierProductBarcodesB = companyB.SupplierProductBarcodes.GroupBy(_ => _.SKU);
-
-            var skusTooIgnore = new List<string>();
-
-            foreach (var supplierProductBarcodeA in supplierProductBarcodesA)
+            foreach (var company in companies)
             {
-                commonCatalogs.Add(new CommonCatalog()
+                var supplierProductBarcodes = company.SupplierProductBarcodes.GroupBy(_ => _.SKU);
+                foreach (var supplierProductBarcode in supplierProductBarcodes)
                 {
-                    SKU = supplierProductBarcodeA.Key,
-                    Description = companyA.Catalogs.First(_ => _.SKU == supplierProductBarcodeA.Key).Description,
-                    Source = companyA.Name
-                });
+                    if (skusTooIgnore.Contains(company.Name.GetHashCode() ^ supplierProductBarcode.Key.GetHashCode()))
+                        continue;
 
-                var barcodesA = supplierProductBarcodeA.Select(_ => _.Barcode);
-
-                foreach (var supplierProductBarcodeB in supplierProductBarcodesB)
-                {
-                    var barcodesB = supplierProductBarcodeB.Select(_ => _.Barcode);
-                    foreach (var barcodeB in barcodesB)
+                    commonCatalogs.Add(new CommonCatalog()
                     {
-                        if (barcodesA.Any(_ => _ == barcodeB))
+                        SKU = supplierProductBarcode.Key,
+                        Description = company.Catalogs.First(_ => _.SKU == supplierProductBarcode.Key).Description,
+                        Source = company.Name
+                    });
+
+                    var otherCompanies = companies.Where(_ => _ != company);
+
+                    foreach (var barcode in supplierProductBarcode.Select(_ => _.Barcode))
+                    {
+                        foreach (var otherCompany in otherCompanies)
                         {
-                            skusTooIgnore.Add(supplierProductBarcodeB.Key);
+                            var matchingBarcodes = otherCompany.SupplierProductBarcodes.Where(_ => _.Barcode == barcode);
+                            foreach (var matchingBarcode in matchingBarcodes)
+                            {
+                                skusTooIgnore.Add(otherCompany.Name.GetHashCode() ^ matchingBarcode.SKU.GetHashCode());
+                            }
                         }
                     }
                 }
-            }
-
-            foreach (var supplierProductBarcodeB in supplierProductBarcodesB.Where(_ => !skusTooIgnore.Contains(_.Key)))
-            {
-                commonCatalogs.Add(new CommonCatalog()
-                {
-                    SKU = supplierProductBarcodeB.Key,
-                    Description = companyB.Catalogs.First(_ => _.SKU == supplierProductBarcodeB.Key).Description,
-                    Source = companyB.Name
-                });
             }
 
             return commonCatalogs;

@@ -26,16 +26,17 @@
             var megaMergerService = new MegaMergerService();
 
             // Act
-            var commonCatalog = megaMergerService.GetCommonCatalog(new[] {companyA, companyB});
+            var commonCatalogs = megaMergerService.GetCommonCatalog(new[] {companyA, companyB});
 
             // Assert
-            AssertCommonCatalogExists(commonCatalog, "647-vyk-317", "Walkers Special Old Whiskey", "A");
-            AssertCommonCatalogExists(commonCatalog, "280-oad-768", "Bread - Raisin", "A");
-            AssertCommonCatalogExists(commonCatalog, "165-rcy-650", "Tea - Decaf 1 Cup", "A");
-            AssertCommonCatalogExists(commonCatalog, "999-eol-949", "Cheese - Grana Padano", "B");
-            AssertCommonCatalogExists(commonCatalog, "167-eol-949", "Cheese - Grana Padano", "A");
-            AssertCommonCatalogExists(commonCatalog, "999-epd-782", "Carbonated Water - Lemon Lime", "B");
-            AssertCommonCatalogExists(commonCatalog, "650-epd-782", "Carbonated Water - Lemon Lime", "A");
+            Assert.Equal(7, commonCatalogs.Count());
+            AssertCommonCatalogExists(commonCatalogs, "647-vyk-317", "Walkers Special Old Whiskey", "A");
+            AssertCommonCatalogExists(commonCatalogs, "280-oad-768", "Bread - Raisin", "A");
+            AssertCommonCatalogExists(commonCatalogs, "165-rcy-650", "Tea - Decaf 1 Cup", "A");
+            AssertCommonCatalogExists(commonCatalogs, "999-eol-949", "Cheese - Grana Padano", "B");
+            AssertCommonCatalogExists(commonCatalogs, "167-eol-949", "Cheese - Grana Padano", "A");
+            AssertCommonCatalogExists(commonCatalogs, "999-epd-782", "Carbonated Water - Lemon Lime", "B");
+            AssertCommonCatalogExists(commonCatalogs, "650-epd-782", "Carbonated Water - Lemon Lime", "A");
         }
 
         private void AssertCommonCatalogExists(IEnumerable<CommonCatalog> commonCatalogs, string expectedSku, string expectedDescription, string expectedSource)
