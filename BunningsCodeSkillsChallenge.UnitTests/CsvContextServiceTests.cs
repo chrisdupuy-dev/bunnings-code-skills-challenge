@@ -6,9 +6,9 @@
 
     public class CsvContextServiceTests
     {
-        private const string ValidSuppliersDataLocation = "./TestData/ValidSuppliersData.csv";
-        private const string ValidCatalogsDataLocation = "./TestData/ValidCatalogsData.csv";
-        private const string ValidBarcodesDataLocation = "./TestData/ValidSupplierProductBarcodesData.csv";
+        private const string ValidSuppliersDataLocation = "./TestData/SuppliersA.csv";
+        private const string ValidCatalogDataLocation = "./TestData/CatalogA.csv";
+        private const string ValidBarcodesDataLocation = "./TestData/BarcodesA.csv";
 
         [Fact]
         public void ReadCompany_WhenGivenValidData_ShouldReadSuccessfully()
@@ -17,12 +17,12 @@
             var csvContextService = new CsvReaderService();
 
             // Act
-            var company = csvContextService.ReadCompany(ValidSuppliersDataLocation, ValidBarcodesDataLocation, ValidCatalogsDataLocation);
+            var company = csvContextService.ReadCompany("A", ValidSuppliersDataLocation, ValidBarcodesDataLocation, ValidCatalogDataLocation);
 
             // Assert
-            Assert.Equal(3, company.Suppliers.Count());
-            Assert.Equal(3, company.SupplierProductBarcodes.Count());
-            Assert.Equal(3, company.Catalogs.Count());
+            Assert.Equal(5, company.Suppliers.Count());
+            Assert.Equal(52, company.SupplierProductBarcodes.Count());
+            Assert.Equal(5, company.Catalogs.Count());
         }
     }
 }

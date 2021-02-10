@@ -5,6 +5,6 @@
 
     public interface IReaderService
     {
-        Company ReadCompany(string catalogsLocation, string supplierProductBarcodesLocation, string suppliersLocation);
+        Company ReadCompany(string companyName, string catalogsLocation, string supplierProductBarcodesLocation, string suppliersLocation);
     }
 }

@@ -9,7 +9,7 @@
 
     public class CsvReaderService : IReaderService
     {
-        public Company ReadCompany(string suppliersLocation, string supplierProductBarcodesLocation, string catalogsLocation)
+        public Company ReadCompany(string companyName, string suppliersLocation, string supplierProductBarcodesLocation, string catalogsLocation)
         {
             var suppliers = Read<Supplier>(suppliersLocation);
             var supplierProductBarcodes = Read<SupplierProductBarcode>(supplierProductBarcodesLocation);
@@ -17,6 +17,7 @@
 
             return new Company()
             {
+                Name = companyName,
                 Catalogs = catalogs,
                 SupplierProductBarcodes = supplierProductBarcodes,
                 Suppliers = suppliers
