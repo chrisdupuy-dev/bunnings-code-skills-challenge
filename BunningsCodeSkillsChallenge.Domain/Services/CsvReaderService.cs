@@ -7,6 +7,7 @@
     using CsvHelper;
     using Interfaces.Services;
     using Models;
+    using Models.Entities;
 
     public class CsvReaderService : IReaderService
     {

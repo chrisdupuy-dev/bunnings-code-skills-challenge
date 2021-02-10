@@ -5,6 +5,7 @@
     using System.Linq;
     using Interfaces.Services;
     using Models;
+    using Models.Entities;
 
     public class CompanyService : ICompanyService
     {

@@ -1,4 +1,4 @@
-﻿namespace BunningsCodeSkillsChallenge.Domain.Models
+﻿namespace BunningsCodeSkillsChallenge.Domain.Models.Entities
 {
     public class Supplier
     {

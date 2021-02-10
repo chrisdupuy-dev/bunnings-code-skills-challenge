@@ -1,7 +1,7 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Interfaces.Services
 {
     using System.Collections.Generic;
-    using Models;
+    using Models.Entities;
 
     public interface ICompanyService
     {
