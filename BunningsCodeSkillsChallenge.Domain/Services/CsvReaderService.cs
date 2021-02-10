@@ -1,5 +1,6 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Services
 {
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -24,13 +25,13 @@
             };
         }
 
-        private T[] Read<T>(string location)
+        private List<T> Read<T>(string location)
         {
             using (var reader = new StreamReader(location))
             {
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    return csv.GetRecords<T>().ToArray();
+                    return csv.GetRecords<T>().ToList();
                 }
             }
         }

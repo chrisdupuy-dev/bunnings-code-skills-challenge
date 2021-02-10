@@ -6,8 +6,15 @@
     {
         public string Name { get; set; }
 
-        public IEnumerable<Catalog> Catalogs { get; set; }
-        public IEnumerable<SupplierProductBarcode> SupplierProductBarcodes { get; set; }
-        public IEnumerable<Supplier> Suppliers { get; set; }
+        public List<Catalog> Catalogs { get; set; }
+        public List<SupplierProductBarcode> SupplierProductBarcodes { get; set; }
+        public List<Supplier> Suppliers { get; set; }
+
+        public Company()
+        {
+            Catalogs = new List<Catalog>();
+            SupplierProductBarcodes = new List<SupplierProductBarcode>();
+            Suppliers = new List<Supplier>();
+        }
     }
 }
