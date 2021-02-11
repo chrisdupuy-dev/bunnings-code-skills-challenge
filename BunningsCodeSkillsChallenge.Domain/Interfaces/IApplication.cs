@@ -9,6 +9,7 @@
         void ImportCompany(string name, string suppliersLocation, string catalogsLocation, string supplierProductBarcodesLocation);
         void ExportCommonCatalog(string exportLocation);
         CommonCatalog GetCommonCatalog();
+        Catalog GetProduct(string companyName, string sku);
         void AddNewProduct(string companyName, string sku, string description);
         void RemoveProduct(string companyName, string sku);
         Supplier AddSupplier(string companyName, string supplierName);

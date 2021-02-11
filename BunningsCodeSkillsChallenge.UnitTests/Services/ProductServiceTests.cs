@@ -7,7 +7,7 @@
     using Domain.Services;
     using Xunit;
 
-    public class CompanyServiceTests
+    public class ProductServiceTests
     {
         [Theory]
         [InlineData("123-abc-xyz", "2x4 Timber")]
@@ -16,13 +16,13 @@
             // Arrange
             var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
 
-            var companyService = new ProductService(company);
+            var productService = new ProductService(null);
 
             // Act
-            companyService.AddProduct(sku, description);
+            productService.AddProduct(company, sku, description);
 
             // Assert
-            var catalog = companyService.GetProduct(sku);
+            var catalog = productService.GetProduct(company, sku);
             Assert.NotNull(catalog);
             Assert.Equal(description, catalog.Description);
         }
@@ -49,16 +49,16 @@
 
             var company = new Company("A", existingCatalogs, existingSupplierProductBarcodes, new List<Supplier>());
 
-            var companyService = new ProductService(company);
+            var productService = new ProductService(null);
 
             // Act
-            companyService.RemoveProduct(sku);
+            productService.RemoveProduct(company, sku);
 
             // Assert
-            var catalog = companyService.GetProduct(sku);
+            var catalog = productService.GetProduct(company, sku);
             Assert.Null(catalog);
 
-            var supplierProductBarcodes = companyService.GetSupplierProductBarcodesForProduct(sku);
+            var supplierProductBarcodes = productService.GetSupplierProductBarcodesForProduct(company, sku);
             Assert.Empty(supplierProductBarcodes);
         }
 
@@ -74,10 +74,10 @@
 
             var company = new Company("A", existingCatalogs, new List<SupplierProductBarcode>(), new List<Supplier>());
 
-            var companyService = new ProductService(company);
+            var productService = new ProductService(null);
 
             // Act
-            var catalog = companyService.GetProduct(sku);
+            var catalog = productService.GetProduct(company, sku);
 
             // Assert
             Assert.NotNull(catalog);
@@ -106,10 +106,10 @@
 
             var company = new Company("A", existingCatalogs, existingSupplierProductBarcodes, new List<Supplier>());
 
-            var companyService = new ProductService(company);
+            var productService = new ProductService(null);
 
             // Act
-            var supplierProductBarcodes = companyService.GetSupplierProductBarcodesForProduct(sku);
+            var supplierProductBarcodes = productService.GetSupplierProductBarcodesForProduct(company, sku);
 
             // Assert
             Assert.Single(supplierProductBarcodes);

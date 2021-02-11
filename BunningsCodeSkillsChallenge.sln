@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BunningsCodeSkillsChallenge", "BunningsCodeSkillsChallenge\BunningsCodeSkillsChallenge.csproj", "{06B8126F-74B0-4F55-B043-1ADC9D046524}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BunningsCodeSkillsChallenge.Domain", "BunningsCodeSkillsChallenge.Domain\BunningsCodeSkillsChallenge.Domain.csproj", "{0194C375-4D25-4FE0-B9CF-346BD4999403}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BunningsCodeSkillsChallenge.Domain", "BunningsCodeSkillsChallenge.Domain\BunningsCodeSkillsChallenge.Domain.csproj", "{0194C375-4D25-4FE0-B9CF-346BD4999403}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BunningsCodeSkillsChallenge.UnitTests", "BunningsCodeSkillsChallenge.UnitTests\BunningsCodeSkillsChallenge.UnitTests.csproj", "{D6515919-DFB8-40D9-A486-11723DD08198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BunningsCodeSkillsChallenge.IntegrationTests", "BunningsCodeSkillsChallenge.IntegrationTests\BunningsCodeSkillsChallenge.IntegrationTests.csproj", "{ADEF439E-EB93-435A-BEB7-E5C200214273}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{D6515919-DFB8-40D9-A486-11723DD08198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6515919-DFB8-40D9-A486-11723DD08198}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6515919-DFB8-40D9-A486-11723DD08198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADEF439E-EB93-435A-BEB7-E5C200214273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADEF439E-EB93-435A-BEB7-E5C200214273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADEF439E-EB93-435A-BEB7-E5C200214273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADEF439E-EB93-435A-BEB7-E5C200214273}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

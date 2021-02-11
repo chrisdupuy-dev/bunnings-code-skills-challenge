@@ -3,41 +3,41 @@
     using System.Collections.Generic;
     using System.Linq;
     using Interfaces.Services;
+    using Microsoft.Extensions.Logging;
     using Models;
     using Models.Entities;
 
     public class SupplierService : ISupplierService
     {
-        private readonly Company _company;
-
-        public SupplierService(Company company)
+        private readonly ILogger _logger;
+        public SupplierService(ILogger<SupplierService> logger)
         {
-            _company = company;
+            _logger = logger;
         }
 
-        public Supplier GetSupplier(int id)
+        public Supplier GetSupplier(Company company, int id)
         {
-            return _company.Suppliers.FirstOrDefault(_ => _.ID == id);
+            return company.Suppliers.FirstOrDefault(_ => _.ID == id);
         }
 
-        public Supplier GetSupplierByName(string name)
+        public Supplier GetSupplierByName(Company company, string name)
         {
-            return _company.Suppliers.FirstOrDefault(_ => _.Name == name);
+            return company.Suppliers.FirstOrDefault(_ => _.Name == name);
         }
 
-        public IEnumerable<Supplier> GetSuppliers()
+        public IEnumerable<Supplier> GetSuppliers(Company company)
         {
-            return _company.Suppliers;
+            return company.Suppliers;
         }
 
-        public Supplier CreateSupplier(string name)
+        public Supplier CreateSupplier(Company company, string name)
         {
             var newSupplier = new Supplier()
             {
                 Name = name
             };
 
-            _company.InsertSupplier(newSupplier);
+            company.InsertSupplier(newSupplier);
 
             return new Supplier();
         }

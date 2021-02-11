@@ -73,9 +73,12 @@
 
         private static ServiceProvider ConfigureServices(ServiceCollection serviceCollection)
         {
-            return serviceCollection.AddLogging(c => c.AddConsole())
+            return serviceCollection
+                .AddLogging(c => c.AddConsole())
                 .AddScoped<IImportExportService, CsvImportExportService>()
                 .AddScoped<IMegaMergerService, MegaMergerService>()
+                .AddScoped<IProductService, ProductService>()
+                .AddScoped<ISupplierService, SupplierService>()
                 .AddTransient<IApplication, BunningsCodeSkillsChallengeApplication>()
                 .BuildServiceProvider();
         }

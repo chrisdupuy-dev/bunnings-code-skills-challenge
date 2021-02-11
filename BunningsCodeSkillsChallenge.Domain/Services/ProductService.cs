@@ -4,56 +4,56 @@
     using System.Collections.Generic;
     using System.Linq;
     using Interfaces.Services;
+    using Microsoft.Extensions.Logging;
     using Models;
     using Models.Entities;
 
     public class ProductService : IProductService
     {
-        private readonly Company _company;
-
-        public ProductService(Company company)
+        private readonly ILogger _logger;
+        public ProductService(ILogger<ProductService> logger)
         {
-            _company = company;
+            _logger = logger;
         }
 
-        public void AddProduct(string sku, string description)
+        public void AddProduct(Company company, string sku, string description)
         {
-            var catalog = new Catalog()
+            var catalog = new Catalog
             {
                 SKU = sku,
                 Description = description
             };
 
-            _company.InsertCatalog(catalog);
+            company.InsertCatalog(catalog);
         }
 
-        public void RemoveProduct(string sku)
+        public void RemoveProduct(Company company, string sku)
         {
-            var catalogToRemove = _company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
+            var catalogToRemove = company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
             if (catalogToRemove == null)
                 throw new Exception();
 
-            var supplierProductCodes = _company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
-            _company.RemoveSupplierProductBarcodes(supplierProductCodes);
-            _company.RemoveCatalog(catalogToRemove);
+            var supplierProductCodes = company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
+            company.RemoveSupplierProductBarcodes(supplierProductCodes);
+            company.RemoveCatalog(catalogToRemove);
         }
 
-        public Catalog GetProduct(string sku)
+        public Catalog GetProduct(Company company, string sku)
         {
-            return _company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
+            return company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
         }
 
-        public IEnumerable<SupplierProductBarcode> GetSupplierProductBarcodesForProduct(string sku)
+        public IEnumerable<SupplierProductBarcode> GetSupplierProductBarcodesForProduct(Company company, string sku)
         {
-            return _company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
+            return company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
         }
 
-        public void AddBarcodesToProduct(int supplierId, string sku, IEnumerable<string> barcodes)
+        public void AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes)
         {
-            if (!_company.Suppliers.Any(_ => _.ID == supplierId))
+            if (!company.Suppliers.Any(_ => _.ID == supplierId))
                 throw new Exception();
 
-            if (!_company.Catalogs.Any(_ => _.SKU == sku))
+            if (!company.Catalogs.Any(_ => _.SKU == sku))
                 throw new Exception();
 
             foreach (var barcode in barcodes)
@@ -65,7 +65,7 @@
                     Barcode = barcode
                 };
 
-                _company.InsertSupplierProductBarcode(newSupplierProductBarcode);
+                company.InsertSupplierProductBarcode(newSupplierProductBarcode);
             }
         }
     }

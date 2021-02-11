@@ -8,22 +8,27 @@
     using Microsoft.Extensions.Logging;
     using Models;
     using Models.Entities;
-    using Services;
 
     public class BunningsCodeSkillsChallengeApplication : IApplication
     {
         private readonly ILogger _logger;
         private readonly IImportExportService _importExport;
         private readonly IMegaMergerService _megaMergerService;
+        private readonly IProductService _productService;
+        private readonly ISupplierService _supplierService;
 
         private List<Company> _companies { get; set; }
         private CommonCatalog _commonCatalog { get; set; }
 
-        public BunningsCodeSkillsChallengeApplication(ILogger<BunningsCodeSkillsChallengeApplication> logger, IImportExportService importExport, IMegaMergerService megaMergerService)
+        public BunningsCodeSkillsChallengeApplication(ILogger<BunningsCodeSkillsChallengeApplication> logger, 
+            IImportExportService importExport, IMegaMergerService megaMergerService, IProductService productService, 
+            ISupplierService supplierService)
         {
             _logger = logger;
             _importExport = importExport;
             _megaMergerService = megaMergerService;
+            _productService = productService;
+            _supplierService = supplierService;
             _commonCatalog = new CommonCatalog(Enumerable.Empty<CommonCatalogItem>());
             _companies = new List<Company>();
         }
@@ -47,61 +52,61 @@
             return _commonCatalog;
         }
 
+        public Catalog GetProduct(string companyName, string sku)
+        {
+            var company = GetCompany(companyName);
+
+            return _productService.GetProduct(company, sku);
+        }
+
         public void AddNewProduct(string companyName, string sku, string description)
         {
-            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
-            if (company == null)
-                throw new Exception("Company not found");
+            var company = GetCompany(companyName);
 
-            var productService = new ProductService(company);
-            productService.AddProduct(sku, description);
+            _productService.AddProduct(company, sku, description);
 
             ReloadCommonCatalog();
         }
 
         public void RemoveProduct(string companyName, string sku)
         {
-            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
-            if (company == null)
-                throw new Exception("Company not found");
+            var company = GetCompany(companyName);
 
-            var productService = new ProductService(company);
-            productService.RemoveProduct(sku);
+            _productService.RemoveProduct(company, sku);
 
             ReloadCommonCatalog();
         }
 
         public IEnumerable<Supplier> GetSuppliers(string companyName)
         {
-            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
-            if (company == null)
-                throw new Exception("Company not found");
+            var company = GetCompany(companyName);
 
-            var supplierService = new SupplierService(company);
-
-            return supplierService.GetSuppliers();
+            return _supplierService.GetSuppliers(company);
         }
 
         public Supplier AddSupplier(string companyName, string supplierName)
         {
-            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
-            if (company == null)
-                throw new Exception("Company not found");
+            var company = GetCompany(companyName);
 
-            var supplierService = new SupplierService(company);
-            return supplierService.CreateSupplier(supplierName);
+            return _supplierService.CreateSupplier(company, supplierName);
         }
 
         public void AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
         {
-            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
-            if (company == null)
-                throw new Exception("Company not found");
+            var company = GetCompany(companyName);
 
-            var productService = new ProductService(company);
-            productService.AddBarcodesToProduct(supplierId, sku, barcodes);
+            _productService.AddBarcodesToProduct(company, supplierId, sku, barcodes);
 
             ReloadCommonCatalog();
+        }
+
+        private Company GetCompany(string companyName)
+        {
+            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
+            if (company == null)
+               throw new Exception("Company not found");
+
+            return company;
         }
 
         private void ReloadCommonCatalog()
