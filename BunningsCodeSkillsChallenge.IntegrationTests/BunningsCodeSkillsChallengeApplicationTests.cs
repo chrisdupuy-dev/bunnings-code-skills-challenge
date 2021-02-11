@@ -71,10 +71,20 @@
         }
 
         [Theory]
-        [InlineData()]
-        public void AddSupplier_WhenInputValid_ShouldAddSupplier()
+        [InlineData("A", "650-epd-782")]
+        public void RemoveProduct_WhenInputValid_ShouldRemoveFromCommonCatalog(string companyName, string sku)
         {
+            // Act
+            _app.RemoveProduct(companyName, sku);
 
+            // Assert
+            var commonCatalog = _app.GetCommonCatalog();
+            var commonCatalogItem = commonCatalog.CommonCatalogItems.FirstOrDefault(_ => _.SKU == sku);
+
+            Assert.Null(commonCatalogItem);
+
+            var catalog = _app.GetProduct(companyName, sku);
+            Assert.Null(catalog);
         }
     }
 }

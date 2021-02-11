@@ -12,8 +12,8 @@
         Catalog GetProduct(string companyName, string sku);
         void AddNewProduct(string companyName, string sku, string description);
         void RemoveProduct(string companyName, string sku);
-        Supplier AddSupplier(string companyName, string supplierName);
         IEnumerable<Supplier> GetSuppliers(string companyName);
+        Supplier AddSupplier(string companyName, string supplierName);
         void AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes);
     }
 }
