@@ -5,6 +5,7 @@
     public interface ISupplierService
     {
         Supplier GetSupplier(int ID);
-        Supplier CreateSupplier(string Name);
+        Supplier CreateSupplier(string name);
+        Supplier GetSupplierByName(string name);
     }
 }

@@ -9,7 +9,7 @@
     {
         public CommonCatalog GetCommonCatalog(IEnumerable<Company> companies)
         {
-            var commonCatalogs = new List<CommonCatalogItem>();
+            var commonCatalogItems = new List<CommonCatalogItem>();
             var skusTooIgnore = new HashSet<int>();
 
             foreach (var company in companies)
@@ -24,12 +24,8 @@
                     if (skusTooIgnore.Contains(company.Name.GetHashCode() ^ supplierProductBarcode.Key.GetHashCode()))
                         continue;
 
-                    commonCatalogs.Add(new CommonCatalogItem()
-                    {
-                        SKU = supplierProductBarcode.Key,
-                        Description = company.Catalogs.First(_ => _.SKU == supplierProductBarcode.Key).Description,
-                        Source = company.Name
-                    });
+                    var description = company.Catalogs.First(_ => _.SKU == supplierProductBarcode.Key).Description;
+                    commonCatalogItems.Add(new CommonCatalogItem(supplierProductBarcode.Key, description, company.Name));
 
                     foreach (var barcode in supplierProductBarcode.Select(_ => _.Barcode))
                     {
@@ -48,7 +44,7 @@
                 }
             }
 
-            return new CommonCatalog() { CommonCatalogItems = commonCatalogs };
+            return new CommonCatalog(commonCatalogItems);
         }
     }
 }

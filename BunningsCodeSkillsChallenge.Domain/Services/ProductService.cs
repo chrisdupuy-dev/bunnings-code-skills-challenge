@@ -48,7 +48,7 @@
             return _company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
         }
 
-        public void AddBarcodesToProduct(int supplierId, string sku, string[] barcodes)
+        public void AddBarcodesToProduct(int supplierId, string sku, IEnumerable<string> barcodes)
         {
             if (!_company.Suppliers.Any(_ => _.ID == supplierId))
                 throw new Exception();

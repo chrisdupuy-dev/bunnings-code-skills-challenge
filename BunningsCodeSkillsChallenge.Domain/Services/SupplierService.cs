@@ -1,5 +1,6 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Services
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Interfaces.Services;
     using Models;
@@ -17,6 +18,16 @@
         public Supplier GetSupplier(int id)
         {
             return _company.Suppliers.FirstOrDefault(_ => _.ID == id);
+        }
+
+        public Supplier GetSupplierByName(string name)
+        {
+            return _company.Suppliers.FirstOrDefault(_ => _.Name == name);
+        }
+
+        public IEnumerable<Supplier> GetSuppliers()
+        {
+            return _company.Suppliers;
         }
 
         public Supplier CreateSupplier(string name)
