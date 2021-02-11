@@ -41,7 +41,6 @@
             using (var writer = new StreamWriter(location))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                //csv.WriteHeader(typeof(T));
                 csv.WriteRecords(records);
             }
         }
