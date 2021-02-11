@@ -7,9 +7,9 @@
 
     public class MegaMergerService : IMegaMergerService
     {
-        public IEnumerable<CommonCatalog> GetCommonCatalog(IEnumerable<Company> companies)
+        public CommonCatalog GetCommonCatalog(IEnumerable<Company> companies)
         {
-            var commonCatalogs = new List<CommonCatalog>();
+            var commonCatalogs = new List<CommonCatalogItem>();
             var skusTooIgnore = new HashSet<int>();
 
             foreach (var company in companies)
@@ -24,7 +24,7 @@
                     if (skusTooIgnore.Contains(company.Name.GetHashCode() ^ supplierProductBarcode.Key.GetHashCode()))
                         continue;
 
-                    commonCatalogs.Add(new CommonCatalog()
+                    commonCatalogs.Add(new CommonCatalogItem()
                     {
                         SKU = supplierProductBarcode.Key,
                         Description = company.Catalogs.First(_ => _.SKU == supplierProductBarcode.Key).Description,
@@ -48,7 +48,7 @@
                 }
             }
 
-            return commonCatalogs;
+            return new CommonCatalog() { CommonCatalogItems = commonCatalogs };
         }
     }
 }

@@ -14,9 +14,9 @@
         public void AddProduct_WhenValid_ShouldAddSuccessfully(string sku, string description)
         {
             // Arrange
-            var company = new Company();
+            var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
 
-            var companyService = new CompanyService(company);
+            var companyService = new ProductService(company);
 
             // Act
             companyService.AddProduct(sku, description);
@@ -32,13 +32,12 @@
         public void RemoveProduct_WhenValid_ShouldRemoveSuccessfully(string sku)
         {
             // Arrange
-            var company = new Company();
-            company.Catalogs = new List<Catalog>()
+            var existingCatalogs = new List<Catalog>()
             {
                 new Catalog() { SKU = sku }
             };
 
-            company.SupplierProductBarcodes = new List<SupplierProductBarcode>()
+            var existingSupplierProductBarcodes = new List<SupplierProductBarcode>()
             {
                 new SupplierProductBarcode()
                 {
@@ -48,7 +47,9 @@
                 }
             };
 
-            var companyService = new CompanyService(company);
+            var company = new Company("A", existingCatalogs, existingSupplierProductBarcodes, new List<Supplier>());
+
+            var companyService = new ProductService(company);
 
             // Act
             companyService.RemoveProduct(sku);
@@ -66,12 +67,14 @@
         public void GetProduct_WhenValid_ShouldReturnSuccessfully(string sku, string description)
         {
             // Arrange
-            var company = new Company
+            var existingCatalogs = new List<Catalog>()
             {
-                Catalogs = new List<Catalog>() {new Catalog() {SKU = sku, Description = description}}
+                new Catalog() { SKU = sku }
             };
 
-            var companyService = new CompanyService(company);
+            var company = new Company("A", existingCatalogs, new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            var companyService = new ProductService(company);
 
             // Act
             var catalog = companyService.GetProduct(sku);
@@ -86,13 +89,12 @@
         public void GetSupplierProductBarcodesForProduct_WhenValid_ShouldReturnSuccessfully(string sku, string barcode, int supplierID)
         {
             // Arrange
-            var company = new Company();
-            company.Catalogs = new List<Catalog>()
+            var existingCatalogs = new List<Catalog>()
             {
                 new Catalog() { SKU = sku }
             };
 
-            company.SupplierProductBarcodes = new List<SupplierProductBarcode>()
+            var existingSupplierProductBarcodes = new List<SupplierProductBarcode>()
             {
                 new SupplierProductBarcode()
                 {
@@ -102,7 +104,9 @@
                 }
             };
 
-            var companyService = new CompanyService(company);
+            var company = new Company("A", existingCatalogs, existingSupplierProductBarcodes, new List<Supplier>());
+
+            var companyService = new ProductService(company);
 
             // Act
             var supplierProductBarcodes = companyService.GetSupplierProductBarcodesForProduct(sku);

@@ -14,10 +14,10 @@
         public void ReadCompany_WhenGivenValidData_ShouldReadSuccessfully()
         {
             // Arrange
-            var csvContextService = new CsvReaderService();
+            var csvContextService = new CsvImportExportService();
 
             // Act
-            var company = csvContextService.ReadCompany("A", ValidSuppliersDataLocation, ValidBarcodesDataLocation, ValidCatalogDataLocation);
+            var company = csvContextService.ImportCompany("A", ValidSuppliersDataLocation, ValidCatalogDataLocation, ValidBarcodesDataLocation);
 
             // Assert
             Assert.Equal(5, company.Suppliers.Count());

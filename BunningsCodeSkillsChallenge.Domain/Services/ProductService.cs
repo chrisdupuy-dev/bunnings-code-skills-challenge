@@ -7,11 +7,11 @@
     using Models;
     using Models.Entities;
 
-    public class CompanyService : ICompanyService
+    public class ProductService : IProductService
     {
         private readonly Company _company;
 
-        public CompanyService(Company company)
+        public ProductService(Company company)
         {
             _company = company;
         }
@@ -24,7 +24,7 @@
                 Description = description
             };
 
-            _company.Catalogs.Add(catalog);
+            _company.InsertCatalog(catalog);
         }
 
         public void RemoveProduct(string sku)
@@ -33,8 +33,9 @@
             if (catalogToRemove == null)
                 throw new Exception();
 
-            _company.SupplierProductBarcodes.RemoveAll(_ => _.SKU == sku);
-            _company.Catalogs.Remove(catalogToRemove);
+            var supplierProductCodes = _company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
+            _company.RemoveSupplierProductBarcodes(supplierProductCodes);
+            _company.RemoveCatalog(catalogToRemove);
         }
 
         public Catalog GetProduct(string sku)
@@ -45,6 +46,27 @@
         public IEnumerable<SupplierProductBarcode> GetSupplierProductBarcodesForProduct(string sku)
         {
             return _company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
+        }
+
+        public void AddBarcodesToProduct(int supplierId, string sku, string[] barcodes)
+        {
+            if (!_company.Suppliers.Any(_ => _.ID == supplierId))
+                throw new Exception();
+
+            if (!_company.Catalogs.Any(_ => _.SKU == sku))
+                throw new Exception();
+
+            foreach (var barcode in barcodes)
+            {
+                var newSupplierProductBarcode = new SupplierProductBarcode()
+                {
+                    SupplierID = supplierId,
+                    SKU = sku,
+                    Barcode = barcode
+                };
+
+                _company.InsertSupplierProductBarcode(newSupplierProductBarcode);
+            }
         }
     }
 }

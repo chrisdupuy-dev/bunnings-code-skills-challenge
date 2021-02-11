@@ -5,6 +5,6 @@
 
     public interface IMegaMergerService
     {
-        IEnumerable<CommonCatalog> GetCommonCatalog(IEnumerable<Company> companies);
+        CommonCatalog GetCommonCatalog(IEnumerable<Company> companies);
     }
 }

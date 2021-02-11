@@ -1,9 +1,8 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Models
 {
+    using System.Collections.Generic;
     public class CommonCatalog
     {
-        public string SKU { get; set; }
-        public string Description { get; set; }
-        public string Source { get; set; }
+        public IEnumerable<CommonCatalogItem> CommonCatalogItems { get; set; }
     }
 }

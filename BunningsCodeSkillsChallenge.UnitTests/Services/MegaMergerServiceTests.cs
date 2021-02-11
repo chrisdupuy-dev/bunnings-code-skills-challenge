@@ -19,32 +19,34 @@
         public void GetCommonCatalog_WhenValidCompanies_ShouldReturnCommonCatalogSuccessfully()
         {
             // Arrange
-            var csvContextService = new CsvReaderService();
-            var companyA = csvContextService.ReadCompany("A", SuppliersALocation, BarcodesALocation, CatalogALocation);
-            var companyB = csvContextService.ReadCompany("B", SuppliersBLocation, BarcodesBLocation, CatalogBLocation);
+            var csvContextService = new CsvImportExportService();
+            var companyA = csvContextService.ImportCompany("A", SuppliersALocation, CatalogALocation, BarcodesALocation);
+            var companyB = csvContextService.ImportCompany("B", SuppliersBLocation, CatalogBLocation, BarcodesBLocation);
 
             var megaMergerService = new MegaMergerService();
 
             // Act
-            var commonCatalogs = megaMergerService.GetCommonCatalog(new[] {companyA, companyB});
+            var commonCatalog = megaMergerService.GetCommonCatalog(new[] {companyA, companyB});
 
             // Assert
-            Assert.Equal(7, commonCatalogs.Count());
-            AssertCommonCatalogExists(commonCatalogs, "647-vyk-317", "Walkers Special Old Whiskey", "A");
-            AssertCommonCatalogExists(commonCatalogs, "280-oad-768", "Bread - Raisin", "A");
-            AssertCommonCatalogExists(commonCatalogs, "165-rcy-650", "Tea - Decaf 1 Cup", "A");
-            AssertCommonCatalogExists(commonCatalogs, "999-eol-949", "Cheese - Grana Padano", "B");
-            AssertCommonCatalogExists(commonCatalogs, "167-eol-949", "Cheese - Grana Padano", "A");
-            AssertCommonCatalogExists(commonCatalogs, "999-epd-782", "Carbonated Water - Lemon Lime", "B");
-            AssertCommonCatalogExists(commonCatalogs, "650-epd-782", "Carbonated Water - Lemon Lime", "A");
+            var commonCatalogItems = commonCatalog.CommonCatalogItems;
+
+            Assert.Equal(7, commonCatalogItems.Count());
+            AssertCommonCatalogExists(commonCatalogItems, "647-vyk-317", "Walkers Special Old Whiskey", "A");
+            AssertCommonCatalogExists(commonCatalogItems, "280-oad-768", "Bread - Raisin", "A");
+            AssertCommonCatalogExists(commonCatalogItems, "165-rcy-650", "Tea - Decaf 1 Cup", "A");
+            AssertCommonCatalogExists(commonCatalogItems, "999-eol-949", "Cheese - Grana Padano", "B");
+            AssertCommonCatalogExists(commonCatalogItems, "167-eol-949", "Cheese - Grana Padano", "A");
+            AssertCommonCatalogExists(commonCatalogItems, "999-epd-782", "Carbonated Water - Lemon Lime", "B");
+            AssertCommonCatalogExists(commonCatalogItems, "650-epd-782", "Carbonated Water - Lemon Lime", "A");
         }
 
-        private void AssertCommonCatalogExists(IEnumerable<CommonCatalog> commonCatalogs, string expectedSku, string expectedDescription, string expectedSource)
+        private void AssertCommonCatalogExists(IEnumerable<CommonCatalogItem> commonCatalogItems, string expectedSku, string expectedDescription, string expectedSource)
         {
-            var commonCatalog = commonCatalogs.FirstOrDefault(_ => _.SKU == expectedSku);
-            Assert.NotNull(commonCatalog);
-            Assert.Equal(expectedDescription, commonCatalog.Description);
-            Assert.Equal(expectedSource, commonCatalog.Source);
+            var commonCatalogItem = commonCatalogItems.FirstOrDefault(_ => _.SKU == expectedSku);
+            Assert.NotNull(commonCatalogItem);
+            Assert.Equal(expectedDescription, commonCatalogItem.Description);
+            Assert.Equal(expectedSource, commonCatalogItem.Source);
         }
     }
 }
