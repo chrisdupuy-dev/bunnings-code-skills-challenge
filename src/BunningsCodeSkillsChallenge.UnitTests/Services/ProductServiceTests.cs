@@ -77,7 +77,7 @@
             var productService = new ProductService(null);
 
             // Act
-            var catalog = productService.GetProduct(company, sku);
+            var catalog = productService.GetProduct(company, sku); // remove stuff like this, use company to verify
 
             // Assert
             Assert.NotNull(catalog);
@@ -118,6 +118,13 @@
             Assert.Equal(sku, supplierProductBarcode.SKU);
             Assert.Equal(barcode, supplierProductBarcode.Barcode);
             Assert.Equal(supplierID, supplierProductBarcode.SupplierID);
+        }
+
+        [Theory]
+        [InlineData()]
+        public void AddBarcodesToProduct_()
+        {
+            // Fill this in
         }
     }
 }

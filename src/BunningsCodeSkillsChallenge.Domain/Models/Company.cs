@@ -6,7 +6,7 @@
 
     public class Company
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public IEnumerable<Catalog> Catalogs { get; private set; }
         public IEnumerable<SupplierProductBarcode> SupplierProductBarcodes { get; private set; }

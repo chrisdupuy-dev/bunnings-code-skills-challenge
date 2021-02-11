@@ -17,3 +17,10 @@ From the .\src\ directory run the following command to run the unit tests for th
 ## Areas for improvement
 
 ## Assumptions
+
+## TODO
+Consider negatives cases like SKU already exists in company when adding
+Error handling?
+Logging?
+Happy with names of things?
+More specific merge tests?
