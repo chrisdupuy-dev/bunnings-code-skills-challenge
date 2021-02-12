@@ -21,6 +21,12 @@
 
         public Company AddCompany(Company company)
         {
+            if (_companies.Contains(company))
+                throw new Exception("Company already exists");
+
+            if (_companies.Any(_ => _.Name == company.Name))
+                throw new Exception("Company name already in use");
+
             _companies.Add(company);
 
             return company;

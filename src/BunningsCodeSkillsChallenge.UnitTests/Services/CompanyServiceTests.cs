@@ -27,6 +27,35 @@
         }
 
         [Fact]
+        public void AddCompany_WhenCalledWithExistingCompany_ShouldThrowException()
+        {
+            // Arrange
+            var companyName = "A";
+            var company = new Company(companyName, new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            var companyService = new CompanyService(null);
+            companyService.AddCompany(company);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => companyService.AddCompany(company));
+        }
+
+        [Fact]
+        public void AddCompany_WhenCalledWithExistingCompanyName_ShouldThrowException()
+        {
+            // Arrange
+            var companyName = "A";
+            var companyA = new Company(companyName, new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
+            var companyB = new Company(companyName, new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            var companyService = new CompanyService(null);
+            companyService.AddCompany(companyA);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => companyService.AddCompany(companyB));
+        }
+
+        [Fact]
         public void GetCompany_WhenCalledWithInvalidName_ShouldThrowException()
         {
             // Arrange
