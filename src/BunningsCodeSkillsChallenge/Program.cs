@@ -1,8 +1,6 @@
 ﻿namespace BunningsCodeSkillsChallenge
 {
     using System;
-    using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using Domain;
     using Domain.Interfaces;
