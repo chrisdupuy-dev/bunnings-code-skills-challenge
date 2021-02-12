@@ -22,19 +22,19 @@
 
         public Supplier InsertSupplier(Supplier newSupplier)
         {
-            var newId = Suppliers.Max(_ => _.ID) + 1;
+            int newId = Suppliers.Any() ? Suppliers.Max(_ => _.ID) + 1 : 1;
             newSupplier.ID = newId;
 
             Suppliers = Suppliers.Union(new[] {newSupplier});
 
-            return newSupplier; // Probably should create new object
+            return newSupplier;
         }
 
         public Catalog InsertCatalog(Catalog newCatalog)
         {
             Catalogs = Catalogs.Union(new[] { newCatalog });
 
-            return newCatalog; // Probably should create new object
+            return newCatalog;
         }
 
         public void RemoveCatalog(Catalog catalogToRemove)
