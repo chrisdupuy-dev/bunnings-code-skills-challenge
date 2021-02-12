@@ -1,6 +1,8 @@
 ﻿namespace BunningsCodeSkillsChallenge
 {
     using System;
+    using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using Domain;
     using Domain.Interfaces;
@@ -46,26 +48,36 @@
                 var running = true;
                 while (running)
                 {
-                    switch (DisplayMenu().KeyChar)
+                    try
                     {
-                        case '1':
-                            DisplayCommonCatalog(app);
-                            break;
-                        case '2':
-                            ExportCommonCatalog(app);
-                            break;
-                        case '3':
-                            AddProduct(app);
-                            break;
-                        case '4':
-                            RemoveProduct(app);
-                            break;
-                        case '5':
-                            AddBarcodesForProduct(app);
-                            break;
-                        case '6':
-                            running = false;
-                            break;
+                        switch (DisplayMenu().KeyChar)
+                        {
+                            case '1':
+                                DisplayCommonCatalog(app);
+                                break;
+                            case '2':
+                                ExportCommonCatalog(app);
+                                break;
+                            case '3':
+                                AddProduct(app);
+                                break;
+                            case '4':
+                                RemoveProduct(app);
+                                break;
+                            case '5':
+                                AddBarcodesForProduct(app);
+                                break;
+                            case '6':
+                                running = false;
+                                break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"\nOops something went wrong: {e.Message}");
+                        Console.WriteLine("\nPress any key to return to menu...");
+
+                        Console.ReadKey();
                     }
                 }
             }
@@ -120,7 +132,7 @@
 
             Console.WriteLine("Exporting to results.csv...");
             
-            app.ExportCommonCatalog("results.csv");
+            app.ExportCommonCatalog($"{System.IO.Directory.GetCurrentDirectory()}\\results.csv");
             
             Console.WriteLine("Success!");
             Console.WriteLine("\nPress any key to continue...");
@@ -171,13 +183,13 @@
             Console.Write("Enter company name (case sensitive): ");
             var companyName = Console.ReadLine();
 
-            Console.WriteLine("Is this a new supplier (Y/N)?: ");
+            Console.Write("Is this a new supplier (Y/N)?: ");
             var yesNo = Console.ReadKey();
 
             int supplierId;
             if (yesNo.Key == ConsoleKey.Y)
             {
-                Console.WriteLine("Enter supplier name: ");
+                Console.Write("Enter supplier name: ");
                 var supplierName = Console.ReadLine();
 
                 supplierId = app.AddSupplier(companyName, supplierName).ID;
@@ -191,14 +203,14 @@
                     Console.WriteLine($"{supplier.ID}. {supplier.Name}");
                 }
 
-                Console.WriteLine("Enter supplier ID: ");
+                Console.Write("\nEnter supplier ID: ");
                 supplierId = int.Parse(Console.ReadLine());
             }
 
-            Console.WriteLine("Enter SKU: ");
+            Console.Write("Enter SKU: ");
             var sku = Console.ReadLine();
 
-            Console.WriteLine("Enter barcodes (can be comma separated): ");
+            Console.Write("Enter barcodes (can be comma separated): ");
             var barcodes = Console.ReadLine().Split(',').Select(_ => _.Trim());
 
             app.AddProductBarcodes(companyName, sku, supplierId, barcodes);
