@@ -18,6 +18,9 @@
 
         public Catalog AddProduct(Company company, string sku, string description)
         {
+            if (company.Catalogs.Any(_ => _.SKU == sku))
+                throw new Exception("Product with this SKU already exists");
+
             var catalog = new Catalog
             {
                 SKU = sku,

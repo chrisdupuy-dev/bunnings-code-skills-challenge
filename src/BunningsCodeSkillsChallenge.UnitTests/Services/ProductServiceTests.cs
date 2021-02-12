@@ -29,6 +29,20 @@
         }
 
         [Theory]
+        [InlineData("123-abc-xyz", "2x4 Timber")]
+        public void AddProduct_WhenProductWithExistingSkuAlreadyExists_ShouldThrowException(string sku, string description)
+        {
+            // Arrange
+            var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            var productService = new ProductService(null);
+            productService.AddProduct(company, sku, description);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => productService.AddProduct(company, sku, description));
+        }
+
+        [Theory]
         [InlineData("123-abc-xyz")]
         public void RemoveProduct_WhenValid_ShouldRemoveSuccessfully(string sku)
         {
