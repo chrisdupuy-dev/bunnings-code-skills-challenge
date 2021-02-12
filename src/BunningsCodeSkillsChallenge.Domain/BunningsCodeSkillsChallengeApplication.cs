@@ -58,13 +58,15 @@
             return _productService.GetProduct(company, sku);
         }
 
-        public void AddNewProduct(string companyName, string sku, string description)
+        public Catalog AddNewProduct(string companyName, string sku, string description)
         {
             var company = _companyService.GetCompany(companyName);
 
-            _productService.AddProduct(company, sku, description);
+            var productAdded = _productService.AddProduct(company, sku, description);
 
             ReloadCommonCatalog();
+
+            return productAdded;
         }
 
         public void RemoveProduct(string companyName, string sku)
@@ -90,13 +92,15 @@
             return _supplierService.CreateSupplier(company, supplierName);
         }
 
-        public void AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
+        public IEnumerable<SupplierProductBarcode> AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
         {
             var company = _companyService.GetCompany(companyName);
 
-            _productService.AddBarcodesToProduct(company, supplierId, sku, barcodes);
+            var barcodesAdded = _productService.AddBarcodesToProduct(company, supplierId, sku, barcodes);
 
             ReloadCommonCatalog();
+
+            return barcodesAdded;
         }
 
         private void ReloadCommonCatalog()

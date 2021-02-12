@@ -10,10 +10,10 @@
         void ExportCommonCatalog(string exportLocation);
         CommonCatalog GetCommonCatalog();
         Catalog GetProduct(string companyName, string sku);
-        void AddNewProduct(string companyName, string sku, string description);
+        Catalog AddNewProduct(string companyName, string sku, string description);
         void RemoveProduct(string companyName, string sku);
         IEnumerable<Supplier> GetSuppliers(string companyName);
         Supplier AddSupplier(string companyName, string supplierName);
-        void AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes);
+        IEnumerable<SupplierProductBarcode> AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes);
     }
 }

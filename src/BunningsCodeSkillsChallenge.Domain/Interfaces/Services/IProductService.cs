@@ -8,8 +8,8 @@
     {
         Catalog GetProduct(Company company, string sku);
         IEnumerable<SupplierProductBarcode> GetSupplierProductBarcodesForProduct(Company company, string sku);
-        void AddProduct(Company company, string sku, string description);
+        Catalog AddProduct(Company company, string sku, string description);
         void RemoveProduct(Company company, string sku);
-        void AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes);
+        IEnumerable<SupplierProductBarcode> AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes);
     }
 }

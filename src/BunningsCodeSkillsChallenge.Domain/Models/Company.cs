@@ -42,9 +42,11 @@
             Catalogs = Catalogs.Except(new[] { catalogToRemove });
         }
 
-        public void InsertSupplierProductBarcode(SupplierProductBarcode supplierProductBarcode)
+        public SupplierProductBarcode InsertSupplierProductBarcode(SupplierProductBarcode supplierProductBarcode)
         {
             SupplierProductBarcodes = SupplierProductBarcodes.Union(new []{ supplierProductBarcode });
+
+            return supplierProductBarcode;
         }
 
         public void RemoveSupplierProductBarcodes(IEnumerable<SupplierProductBarcode> supplierProductBarcodes)

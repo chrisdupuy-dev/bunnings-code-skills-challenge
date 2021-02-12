@@ -5,7 +5,7 @@
 
     public interface ICompanyService
     {
-        void AddCompany(Company company);
+        Company AddCompany(Company company);
         Company GetCompany(string name);
         IEnumerable<Company> GetAllCompanies();
     }

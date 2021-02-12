@@ -22,7 +22,7 @@
             productService.AddProduct(company, sku, description);
 
             // Assert
-            var catalog = productService.GetProduct(company, sku);
+            var catalog = company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
             Assert.NotNull(catalog);
             Assert.Equal(description, catalog.Description);
         }
@@ -55,10 +55,10 @@
             productService.RemoveProduct(company, sku);
 
             // Assert
-            var catalog = productService.GetProduct(company, sku);
+            var catalog = company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
             Assert.Null(catalog);
 
-            var supplierProductBarcodes = productService.GetSupplierProductBarcodesForProduct(company, sku);
+            var supplierProductBarcodes = company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
             Assert.Empty(supplierProductBarcodes);
         }
 

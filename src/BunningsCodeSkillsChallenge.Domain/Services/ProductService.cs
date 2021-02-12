@@ -16,7 +16,7 @@
             _logger = logger;
         }
 
-        public void AddProduct(Company company, string sku, string description)
+        public Catalog AddProduct(Company company, string sku, string description)
         {
             var catalog = new Catalog
             {
@@ -24,7 +24,7 @@
                 Description = description
             };
 
-            company.InsertCatalog(catalog);
+            return company.InsertCatalog(catalog);
         }
 
         public void RemoveProduct(Company company, string sku)
@@ -48,7 +48,7 @@
             return company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
         }
 
-        public void AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes)
+        public IEnumerable<SupplierProductBarcode> AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes)
         {
             if (company.Suppliers.All(_ => _.ID != supplierId))
                 throw new Exception();
@@ -56,6 +56,7 @@
             if (company.Catalogs.All(_ => _.SKU != sku))
                 throw new Exception();
 
+            var insertedSupplierProductBarcodes = new List<SupplierProductBarcode>();
             foreach (var barcode in barcodes)
             {
                 var newSupplierProductBarcode = new SupplierProductBarcode()
@@ -65,8 +66,10 @@
                     Barcode = barcode
                 };
 
-                company.InsertSupplierProductBarcode(newSupplierProductBarcode);
+                insertedSupplierProductBarcodes.Add(company.InsertSupplierProductBarcode(newSupplierProductBarcode));
             }
+
+            return insertedSupplierProductBarcodes;
         }
     }
 }

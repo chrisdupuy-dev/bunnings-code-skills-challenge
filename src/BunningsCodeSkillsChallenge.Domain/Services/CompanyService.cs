@@ -19,9 +19,11 @@
             _companies = new List<Company>();
         }
 
-        public void AddCompany(Company company)
+        public Company AddCompany(Company company)
         {
             _companies.Add(company);
+
+            return company;
         }
 
         public Company GetCompany(string name)
