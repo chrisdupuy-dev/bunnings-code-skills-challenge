@@ -22,11 +22,12 @@
         {
             var nullLoggerFactory = new NullLoggerFactory();
             var appLogger = new Logger<BunningsCodeSkillsChallengeApplication>(nullLoggerFactory);
+            var companyService = new CompanyService(new Logger<CompanyService>(nullLoggerFactory));
             var productService = new ProductService(new Logger<ProductService>(nullLoggerFactory));
             var supplierService = new SupplierService(new Logger<SupplierService>(nullLoggerFactory));
 
             _app = new BunningsCodeSkillsChallengeApplication(appLogger, new CsvImportExportService(), 
-                new MegaMergerService(), productService, supplierService);
+                new MegaMergerService(), companyService, productService, supplierService);
             
             _app.ImportCompany("A", SuppliersALocation, CatalogALocation, BarcodesALocation);
             _app.ImportCompany("B", SuppliersBLocation, CatalogBLocation, BarcodesBLocation);
