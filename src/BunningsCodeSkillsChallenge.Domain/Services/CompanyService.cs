@@ -11,7 +11,7 @@
     {
         private readonly ILogger _logger;
 
-        private List<Company> _companies { get; set; }
+        private List<Company> _companies { get; }
 
         public CompanyService(ILogger<CompanyService> logger)
         {
