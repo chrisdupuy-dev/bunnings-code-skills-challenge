@@ -1,5 +1,6 @@
 ﻿namespace BunningsCodeSkillsChallenge.UnitTests.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Domain.Models;
@@ -60,6 +61,19 @@
 
             var supplierProductBarcodes = company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
             Assert.Empty(supplierProductBarcodes);
+        }
+
+        [Theory]
+        [InlineData("123-abc-xyz")]
+        public void RemoveProduct_WhenProductDoesNotExist_ShouldThrowException(string sku)
+        {
+            // Arrange
+            var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            var productService = new ProductService(null);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => productService.RemoveProduct(company, sku));
         }
 
         [Theory]
@@ -152,6 +166,53 @@
                 Assert.Equal(supplierId, actualBarcode.SupplierID);
                 Assert.Equal(sku, actualBarcode.SKU);
             }
+        }
+
+
+        [Theory]
+        [InlineData()]
+        public void AddBarcodesToProduct_WhenSupplierDoesNotExist_ShouldThrowException()
+        {
+            // Arrange
+            var supplierId = 1;
+            var sku = "123-abc-xyz";
+            var expectedBarcodes = new[]
+            {
+                "x111111",
+                "y222222",
+                "z333333"
+            };
+
+            var company = new Company("A", new List<Catalog>() { new Catalog() { SKU = sku } },
+                new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            var productService = new ProductService(null);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => productService.AddBarcodesToProduct(company, supplierId, sku, expectedBarcodes));
+        }
+
+        [Theory]
+        [InlineData()]
+        public void AddBarcodesToProduct_WhenProductDoesNotExist_ShouldThrowException()
+        {
+            // Arrange
+            var supplierId = 1;
+            var sku = "123-abc-xyz";
+            var expectedBarcodes = new[]
+            {
+                "x111111",
+                "y222222",
+                "z333333"
+            };
+
+            var company = new Company("A", new List<Catalog>(),
+                new List<SupplierProductBarcode>(), new List<Supplier>() {new Supplier() {ID = supplierId}});
+
+            var productService = new ProductService(null);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => productService.AddBarcodesToProduct(company, supplierId, sku, expectedBarcodes));
         }
     }
 }

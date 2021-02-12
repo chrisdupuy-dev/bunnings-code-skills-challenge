@@ -31,7 +31,7 @@
         {
             var catalogToRemove = company.Catalogs.FirstOrDefault(_ => _.SKU == sku);
             if (catalogToRemove == null)
-                throw new Exception();
+                throw new Exception("Product does not exist");
 
             var supplierProductCodes = company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
             company.RemoveSupplierProductBarcodes(supplierProductCodes);
@@ -51,10 +51,10 @@
         public IEnumerable<SupplierProductBarcode> AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes)
         {
             if (company.Suppliers.All(_ => _.ID != supplierId))
-                throw new Exception();
+                throw new Exception("Supplier does not exist");
 
             if (company.Catalogs.All(_ => _.SKU != sku))
-                throw new Exception();
+                throw new Exception("Product does not exist");
 
             var insertedSupplierProductBarcodes = new List<SupplierProductBarcode>();
             foreach (var barcode in barcodes)
