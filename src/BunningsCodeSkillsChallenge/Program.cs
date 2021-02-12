@@ -77,6 +77,7 @@
                 .AddLogging(c => c.AddConsole())
                 .AddScoped<IImportExportService, CsvImportExportService>()
                 .AddScoped<IMegaMergerService, MegaMergerService>()
+                .AddScoped<ICompanyService, CompanyService>()
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<ISupplierService, SupplierService>()
                 .AddTransient<IApplication, BunningsCodeSkillsChallengeApplication>()

@@ -1,6 +1,5 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Interfaces;
@@ -14,30 +13,30 @@
         private readonly ILogger _logger;
         private readonly IImportExportService _importExport;
         private readonly IMegaMergerService _megaMergerService;
+        private readonly ICompanyService _companyService;
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
 
-        private List<Company> _companies { get; set; }
         private CommonCatalog _commonCatalog { get; set; }
 
         public BunningsCodeSkillsChallengeApplication(ILogger<BunningsCodeSkillsChallengeApplication> logger, 
-            IImportExportService importExport, IMegaMergerService megaMergerService, IProductService productService, 
+            IImportExportService importExport, IMegaMergerService megaMergerService, ICompanyService companyService, IProductService productService, 
             ISupplierService supplierService)
         {
             _logger = logger;
             _importExport = importExport;
             _megaMergerService = megaMergerService;
+            _companyService = companyService;
             _productService = productService;
             _supplierService = supplierService;
             _commonCatalog = new CommonCatalog(Enumerable.Empty<CommonCatalogItem>());
-            _companies = new List<Company>();
         }
 
         public void ImportCompany(string name, string suppliersLocation, string catalogsLocation, string supplierProductBarcodesLocation)
         {
             var company = _importExport.ImportCompany(name, suppliersLocation, catalogsLocation, supplierProductBarcodesLocation);
-
-            _companies.Add(company);
+            
+            _companyService.AddCompany(company);
 
             ReloadCommonCatalog();
         }
@@ -54,14 +53,14 @@
 
         public Catalog GetProduct(string companyName, string sku)
         {
-            var company = GetCompany(companyName);
+            var company = _companyService.GetCompany(companyName);
 
             return _productService.GetProduct(company, sku);
         }
 
         public void AddNewProduct(string companyName, string sku, string description)
         {
-            var company = GetCompany(companyName);
+            var company = _companyService.GetCompany(companyName);
 
             _productService.AddProduct(company, sku, description);
 
@@ -70,7 +69,7 @@
 
         public void RemoveProduct(string companyName, string sku)
         {
-            var company = GetCompany(companyName);
+            var company = _companyService.GetCompany(companyName);
 
             _productService.RemoveProduct(company, sku);
 
@@ -79,39 +78,30 @@
 
         public IEnumerable<Supplier> GetSuppliers(string companyName)
         {
-            var company = GetCompany(companyName);
+            var company = _companyService.GetCompany(companyName);
 
             return _supplierService.GetSuppliers(company);
         }
 
         public Supplier AddSupplier(string companyName, string supplierName)
         {
-            var company = GetCompany(companyName);
+            var company = _companyService.GetCompany(companyName);
 
             return _supplierService.CreateSupplier(company, supplierName);
         }
 
         public void AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
         {
-            var company = GetCompany(companyName);
+            var company = _companyService.GetCompany(companyName);
 
             _productService.AddBarcodesToProduct(company, supplierId, sku, barcodes);
 
             ReloadCommonCatalog();
         }
 
-        private Company GetCompany(string companyName)
-        {
-            var company = _companies.FirstOrDefault(_ => _.Name == companyName);
-            if (company == null)
-               throw new Exception("Company not found");
-
-            return company;
-        }
-
         private void ReloadCommonCatalog()
         {
-            _commonCatalog = _megaMergerService.GetCommonCatalog(_companies);
+            _commonCatalog = _megaMergerService.GetCommonCatalog(_companyService.GetAllCompanies());
         }
     }
 }
