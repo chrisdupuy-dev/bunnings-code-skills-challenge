@@ -50,10 +50,10 @@
 
         public void AddBarcodesToProduct(Company company, int supplierId, string sku, IEnumerable<string> barcodes)
         {
-            if (!company.Suppliers.Any(_ => _.ID == supplierId))
+            if (company.Suppliers.All(_ => _.ID != supplierId))
                 throw new Exception();
 
-            if (!company.Catalogs.Any(_ => _.SKU == sku))
+            if (company.Catalogs.All(_ => _.SKU != sku))
                 throw new Exception();
 
             foreach (var barcode in barcodes)

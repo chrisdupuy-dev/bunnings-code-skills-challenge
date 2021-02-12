@@ -122,9 +122,36 @@
 
         [Theory]
         [InlineData()]
-        public void AddBarcodesToProduct_()
+        public void AddBarcodesToProduct_WhenValid_ShouldInsertBarcodes()
         {
-            // Fill this in
+            // Arrange
+            var supplierId = 1;
+            var sku = "123-abc-xyz";
+            var expectedBarcodes = new []
+            {
+                "x111111",
+                "y222222",
+                "z333333"
+            };
+            
+            var company = new Company("A", new List<Catalog>() {new Catalog(){SKU = sku}},
+                new List<SupplierProductBarcode>(), new List<Supplier>() {new Supplier() { ID = supplierId }});
+
+            var productService = new ProductService(null);
+
+            // Act
+            productService.AddBarcodesToProduct(company, supplierId, sku, expectedBarcodes);
+
+            // Assert
+            Assert.Equal(3, company.SupplierProductBarcodes.Count());
+
+            foreach (var expectedBarcode in expectedBarcodes)
+            {
+                var actualBarcode = company.SupplierProductBarcodes.FirstOrDefault(_ => _.Barcode == expectedBarcode);
+                Assert.NotNull(actualBarcode);
+                Assert.Equal(supplierId, actualBarcode.SupplierID);
+                Assert.Equal(sku, actualBarcode.SKU);
+            }
         }
     }
 }
