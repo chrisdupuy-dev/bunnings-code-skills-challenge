@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Interfaces;
     using Interfaces.Models;
-    using Interfaces.Services;
     using Microsoft.Extensions.Logging;
 
     public class CompanyManager : ICompanyManager

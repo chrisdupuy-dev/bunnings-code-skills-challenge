@@ -1,4 +1,4 @@
-﻿namespace BunningsCodeSkillsChallenge.Domain.Interfaces.Services
+﻿namespace BunningsCodeSkillsChallenge.Domain.Interfaces
 {
     using System.Collections.Generic;
     using Models;
