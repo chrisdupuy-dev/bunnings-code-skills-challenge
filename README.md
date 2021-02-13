@@ -44,6 +44,8 @@ The 'SupplierService', 'CatalogService' and 'SupplierProductBarcodeService' take
 
 Lastly the 'CommonCatalogService' is responsible for merging multiple companies catalogs together into a 'CommonCatalog', this is done by iterating over each company and adding any catalog with available barcodes to the 'CommonCatalog' then checking against each other companies catalogs for matching barcodes. If a matching barcode is found the SKU for that match is added to an ignore hashset to prevent duplication however if a SKU matches with no matching barcodes then it is not possible to determine if it is the same product and therfore an exception is thrown. 
 
+*Note: Exporting 'CommonCatalog' automatically exports to 'results.csv' within the current working directory*
+
 ## Areas for improvement
 * Whilst the merging of catalogs is functional it could be done more efficiently, the values used in the HashSet to keep track of what catalogs have already been added to the system are also not collision safe
 * Currently when a catalog is modified in the system the entire common catalog is reloaded, this could be optimised more to not reload the entire common catalog if not needed or to more intelligently add/remove single catalogs

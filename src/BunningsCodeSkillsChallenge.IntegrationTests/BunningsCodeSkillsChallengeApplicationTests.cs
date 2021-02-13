@@ -25,9 +25,10 @@
             var companyService = new CompanyManager(new Logger<CompanyManager>(nullLoggerFactory));
             var catalogService = new CatalogService(new Logger<CatalogService>(nullLoggerFactory));
             var supplierService = new SupplierService(new Logger<SupplierService>(nullLoggerFactory));
+            var supplierProductBarcodeService = new SupplierProductBarcodeService(new Logger<SupplierProductBarcodeService>(nullLoggerFactory));
 
             _app = new BunningsCodeSkillsChallengeApplication(appLogger, new CsvImportExportService(), 
-                new CommonCatalogService(null), companyService, catalogService, supplierService);
+                new CommonCatalogService(null), companyService, catalogService, supplierService, supplierProductBarcodeService);
             
             _app.ImportCompany("A", SuppliersALocation, CatalogALocation, BarcodesALocation);
             _app.ImportCompany("B", SuppliersBLocation, CatalogBLocation, BarcodesBLocation);

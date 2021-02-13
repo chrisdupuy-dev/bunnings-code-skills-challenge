@@ -26,7 +26,8 @@
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockCatalogService = new Mock<ICatalogService>();
             var mockSupplierService = new Mock<ISupplierService>();
-            
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
+
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
 
@@ -43,7 +44,9 @@
             mockCommonCatalogService.Setup(_ => _.GetCommonCatalogs(allCompanies))
                 .Returns(Enumerable.Empty<CommonCatalog>());
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             app.ImportCompany(companyName, supplierPath, catalogPath, barcodesPath);
@@ -63,10 +66,13 @@
             var mockCompanyService = new Mock<ICompanyManager>();
             var mockCatalogService = new Mock<ICatalogService>();
             var mockSupplierService = new Mock<ISupplierService>();
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, 
+                mockCommonCatalogService.Object, mockCompanyService.Object, 
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             var exportPath = "\\pathToExportTo";
 
@@ -88,6 +94,7 @@
             var mockSupplierService = new Mock<ISupplierService>();
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
 
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
@@ -100,7 +107,9 @@
             var mockCatalogService = new Mock<ICatalogService>();
             mockCatalogService.Setup(_ => _.GetCatalog(mockCompany.Object, sku)).Returns(newCatalog);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             var catalog = app.GetCatalog(companyName, sku);
@@ -126,6 +135,7 @@
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
             var mockCatalogService = new Mock<ICatalogService>();
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
 
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
@@ -135,7 +145,9 @@
             mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             app.InsertCatalog(companyName, sku, description);
@@ -159,6 +171,7 @@
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
             var mockCatalogService = new Mock<ICatalogService>();
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
 
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
@@ -168,7 +181,9 @@
             mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             app.DeleteCatalog(companyName, sku);
@@ -190,6 +205,7 @@
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
             var mockCatalogService = new Mock<ICatalogService>();
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
 
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
@@ -202,7 +218,9 @@
             var mockSupplierService = new Mock<ISupplierService>();
             mockSupplierService.Setup(_ => _.GetSuppliers(mockCompany.Object)).Returns(existingSuppliers);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             var suppliers = app.GetSuppliers(companyName);
@@ -226,6 +244,7 @@
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
             var mockCatalogService = new Mock<ICatalogService>();
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
 
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
@@ -238,7 +257,9 @@
             var mockSupplierService = new Mock<ISupplierService>();
             mockSupplierService.Setup(_ => _.InsertSupplier(mockCompany.Object, supplierName)).Returns(newSupplier);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             var supplierReturned = app.InsertSupplier(companyName, supplierName);
@@ -269,6 +290,7 @@
             var mockImportExportService = new Mock<IImportExportService>();
             var mockCommonCatalogService = new Mock<ICommonCatalogService>();
             var mockSupplierService = new Mock<ISupplierService>();
+            var mockCatalogService = new Mock<ICatalogService>();
 
             var mockCompany = new Mock<ICompany>();
             mockCompany.Setup(_ => _.Name).Returns(companyName);
@@ -278,17 +300,19 @@
             mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
-            var mockCatalogService = new Mock<ICatalogService>();
-            mockCatalogService.Setup(_ => _.InsertSupplierProductBarcodes(mockCompany.Object, supplierId, sku, barcodes));
+            var supplierProductBarcodeService = new Mock<ISupplierProductBarcodeService>();
+            supplierProductBarcodeService.Setup(_ => _.InsertSupplierProductBarcodes(mockCompany.Object, supplierId, sku, barcodes));
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object,
+                mockCommonCatalogService.Object, mockCompanyService.Object,
+                mockCatalogService.Object, mockSupplierService.Object, supplierProductBarcodeService.Object);
 
             // Act
             app.InsertSupplierProductBarcodes(companyName, sku, supplierId, barcodes);
 
             // Assert
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockCatalogService.Verify(_ => _.InsertSupplierProductBarcodes(mockCompany.Object, supplierId, sku, barcodes));
+            supplierProductBarcodeService.Verify(_ => _.InsertSupplierProductBarcodes(mockCompany.Object, supplierId, sku, barcodes));
             mockCommonCatalogService.Verify(_ => _.GetCommonCatalogs(allCompanies));
             mockCompany.Verify();
         }

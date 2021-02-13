@@ -16,12 +16,13 @@
         private readonly ICompanyManager _companyManager;
         private readonly ICatalogService _catalogService;
         private readonly ISupplierService _supplierService;
+        private readonly ISupplierProductBarcodeService _supplierProductBarcodeService;
 
         private IEnumerable<CommonCatalog> _commonCatalogs { get; set; }
 
         public BunningsCodeSkillsChallengeApplication(ILogger<BunningsCodeSkillsChallengeApplication> logger, 
-            IImportExportService importExport, ICommonCatalogService commonCatalogService, ICompanyManager companyManager, ICatalogService catalogService, 
-            ISupplierService supplierService)
+            IImportExportService importExport, ICommonCatalogService commonCatalogService, ICompanyManager companyManager, 
+            ICatalogService catalogService, ISupplierService supplierService, ISupplierProductBarcodeService supplierProductBarcodeService)
         {
             _logger = logger;
             _importExport = importExport;
@@ -29,6 +30,7 @@
             _companyManager = companyManager;
             _catalogService = catalogService;
             _supplierService = supplierService;
+            _supplierProductBarcodeService = supplierProductBarcodeService;
             _commonCatalogs = Enumerable.Empty<CommonCatalog>();
         }
 
@@ -96,7 +98,7 @@
         {
             var company = _companyManager.GetCompany(companyName);
 
-            var barcodesAdded = _catalogService.InsertSupplierProductBarcodes(company, supplierId, sku, barcodes);
+            var barcodesAdded = _supplierProductBarcodeService.InsertSupplierProductBarcodes(company, supplierId, sku, barcodes);
 
             ReloadCommonCatalogs();
 

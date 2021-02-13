@@ -90,6 +90,7 @@
                 .AddTransient<ICompanyManager, CompanyManager>()
                 .AddScoped<ICatalogService, CatalogService>()
                 .AddScoped<ISupplierService, SupplierService>()
+                .AddScoped<ISupplierProductBarcodeService, SupplierProductBarcodeService>()
                 .AddTransient<IApplication, BunningsCodeSkillsChallengeApplication>()
                 .BuildServiceProvider();
         }
