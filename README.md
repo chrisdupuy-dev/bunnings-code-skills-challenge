@@ -14,7 +14,7 @@ From the .\src\ directory run the following command to build the solution:
 Right-click the '**BunningsCodeSkillsChallenge.UnitTests**' or '**BunningsCodeSkillsChallenge.IntegrationTests**' projects and click '**Run Unit Tests**'
 
 ## Running the tests from command-line
-From the build_output directory (.\build_output\\{debug|release}\net5.0\\) run the following command to run the unit tests for the solution after building:
+From the build_output directory (.\src\build_output\\{debug|release}\net5.0\\) run the following command to run the unit tests for the solution after building:
     
     dotnet test .\BunningsCodeSkillsChallenge.UnitTests.dll
     dotnet test .\BunningsCodeSkillsChallenge.IntegrationTests.dll
@@ -23,7 +23,7 @@ From the build_output directory (.\build_output\\{debug|release}\net5.0\\) run t
 Set **'BunningsCodeSkillsChallenge'** project as the start-up project and click run, this will use the provided test data
 
 ## Running the app from command-line
-From the build_output directory (.\build_output\\{debug|release}\net5.0\\) if you wish to run the program with the provided test data simply run the following command:
+From the build_output directory (.\src\build_output\\{debug|release}\net5.0\\) if you wish to run the program with the provided test data simply run the following command:
 
     .\BunningsCodeSkillsChallenge.exe
 
