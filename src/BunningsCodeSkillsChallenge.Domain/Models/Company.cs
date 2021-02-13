@@ -14,7 +14,8 @@
         public IEnumerable<SupplierProductBarcode> SupplierProductBarcodes { get; private set; }
         public IEnumerable<Supplier> Suppliers { get; private set; }
 
-        public Company(string name, IEnumerable<Catalog> catalogs, IEnumerable<SupplierProductBarcode> supplierProductBarcodes, IEnumerable<Supplier> suppliers)
+        public Company(string name, IEnumerable<Catalog> catalogs, 
+            IEnumerable<SupplierProductBarcode> supplierProductBarcodes, IEnumerable<Supplier> suppliers)
         {
             ValidateSupplierProductBarcodes(catalogs, supplierProductBarcodes, suppliers);
 
@@ -24,7 +25,8 @@
             Suppliers = suppliers;
         }
 
-        private void ValidateSupplierProductBarcodes(IEnumerable<Catalog> catalogs, IEnumerable<SupplierProductBarcode> supplierProductBarcodes, IEnumerable<Supplier> suppliers)
+        private void ValidateSupplierProductBarcodes(IEnumerable<Catalog> catalogs, 
+            IEnumerable<SupplierProductBarcode> supplierProductBarcodes, IEnumerable<Supplier> suppliers)
         {
             foreach (var supplierProductBarcode in supplierProductBarcodes)
             {

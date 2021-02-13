@@ -36,7 +36,8 @@
 
         [Theory]
         [InlineData("A", "123-abc-789", "2x4 Timber")]
-        public void InsertCatalog_WhenProductValid_ShouldInsertCatalogToCompanyAndNotCommonCatalog(string companyName, string sku, string description)
+        public void InsertCatalog_WhenProductValid_ShouldInsertCatalogToCompanyAndNotCommonCatalog(string companyName, string sku,
+            string description)
         {
             // Act
             _app.InsertCatalog(companyName, sku, description);
@@ -53,7 +54,8 @@
 
         [Theory]
         [InlineData("A", "123-abc-789", "2x4 Timber", 1, new []{ "X1111", "Y2222", "Z3333" })]
-        public void InsertSupplierProductBarcodes_WhenInputValid_ShouldAddToCommonCatalog(string companyName, string sku, string description, int supplierId, string[] barcodes)
+        public void InsertSupplierProductBarcodes_WhenInputValid_ShouldAddToCommonCatalog(string companyName, string sku, 
+            string description, int supplierId, string[] barcodes)
         {
             // Arrange
             _app.InsertCatalog(companyName, sku, description);

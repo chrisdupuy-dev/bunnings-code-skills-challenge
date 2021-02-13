@@ -17,7 +17,8 @@
             var csvContextService = new CsvImportExportService();
 
             // Act
-            var company = csvContextService.ImportCompany("A", ValidSuppliersDataLocation, ValidCatalogDataLocation, ValidBarcodesDataLocation);
+            var company = csvContextService.ImportCompany("A", ValidSuppliersDataLocation, ValidCatalogDataLocation, 
+                ValidBarcodesDataLocation);
 
             // Assert
             Assert.Equal(5, company.Suppliers.Count());

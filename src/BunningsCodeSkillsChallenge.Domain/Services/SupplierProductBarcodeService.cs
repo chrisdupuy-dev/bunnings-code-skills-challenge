@@ -21,7 +21,8 @@
             return company.SupplierProductBarcodes.Where(_ => _.SKU == sku);
         }
 
-        public IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(ICompany company, int supplierId, string sku, IEnumerable<string> barcodes)
+        public IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(ICompany company, int supplierId, 
+            string sku, IEnumerable<string> barcodes)
         {
             var insertedSupplierProductBarcodes = new List<SupplierProductBarcode>();
             foreach (var barcode in barcodes)

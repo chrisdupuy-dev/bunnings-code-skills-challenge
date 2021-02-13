@@ -41,7 +41,8 @@
             AssertCommonCatalogExists(commonCatalogs, "650-epd-782", "Carbonated Water - Lemon Lime", "A");
         }
 
-        private void AssertCommonCatalogExists(IEnumerable<CommonCatalog> commonCatalogs, string expectedSku, string expectedDescription, string expectedSource)
+        private void AssertCommonCatalogExists(IEnumerable<CommonCatalog> commonCatalogs, string expectedSku, 
+            string expectedDescription, string expectedSource)
         {
             var commonCatalog = commonCatalogs.FirstOrDefault(_ => _.SKU == expectedSku);
             Assert.NotNull(commonCatalog);

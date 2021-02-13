@@ -12,7 +12,8 @@
 
     public class CsvImportExportService : IImportExportService
     {
-        public ICompany ImportCompany(string companyName, string suppliersLocation, string catalogsLocation, string supplierProductBarcodesLocation)
+        public ICompany ImportCompany(string companyName, string suppliersLocation, 
+            string catalogsLocation, string supplierProductBarcodesLocation)
         {
             var suppliers = Read<Supplier>(suppliersLocation);
             var supplierProductBarcodes = Read<SupplierProductBarcode>(supplierProductBarcodesLocation);

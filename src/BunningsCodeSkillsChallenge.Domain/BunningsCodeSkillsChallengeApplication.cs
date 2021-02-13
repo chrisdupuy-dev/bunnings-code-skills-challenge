@@ -94,7 +94,8 @@
             return _supplierService.InsertSupplier(company, supplierName);
         }
 
-        public IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
+        public IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(string companyName, string sku, 
+            int supplierId, IEnumerable<string> barcodes)
         {
             var company = _companyManager.GetCompany(companyName);
 

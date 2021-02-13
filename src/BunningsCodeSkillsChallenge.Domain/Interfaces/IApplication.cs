@@ -14,6 +14,7 @@
         void DeleteCatalog(string companyName, string sku);
         IEnumerable<Supplier> GetSuppliers(string companyName);
         Supplier InsertSupplier(string companyName, string supplierName);
-        IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes);
+        IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(string companyName, string sku, int supplierId, 
+            IEnumerable<string> barcodes);
     }
 }
