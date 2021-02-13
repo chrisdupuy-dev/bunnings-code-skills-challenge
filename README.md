@@ -54,6 +54,9 @@ Lastly the 'CommonCatalogService' is responsible for merging multiple companies 
 * User input and experience could be improved as it does not provide any pre-emptive input validation and only provides exiting back to the menu as a error recovery
 
 ## Assumptions
-* Only catalogs with barcodes available are to be shown
+* Company names are unique
+* Only catalogs with barcodes available are to be shown in common catalog
+* SKUs must be unique within a Company
+* Both Catalog SKU and Supplier ID must exist for a SupplierProductBarcode to exist
 * If two companies have the same SKU but no matching barcodes I assume an unrecoverable conflict has occured and throw an exception
-* The order of the merged catalog does not matter provided the data is the same, I sorted by description
+* The order of the common catalog does not matter provided the data is the same, I sorted by description
