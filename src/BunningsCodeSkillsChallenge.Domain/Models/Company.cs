@@ -1,7 +1,10 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices.ComTypes;
+    using System.Text;
     using Entities;
 
     public class Company
@@ -14,10 +17,24 @@
 
         public Company(string name, IEnumerable<Catalog> catalogs, IEnumerable<SupplierProductBarcode> supplierProductBarcodes, IEnumerable<Supplier> suppliers)
         {
+            ValidateSupplierProductBarcodes(catalogs, supplierProductBarcodes, suppliers);
+
             Name = name;
             Catalogs = catalogs;
             SupplierProductBarcodes = supplierProductBarcodes;
             Suppliers = suppliers;
+        }
+
+        private void ValidateSupplierProductBarcodes(IEnumerable<Catalog> catalogs, IEnumerable<SupplierProductBarcode> supplierProductBarcodes, IEnumerable<Supplier> suppliers)
+        {
+            foreach (var supplierProductBarcode in supplierProductBarcodes)
+            {
+                if (!catalogs.Any(_ => _.SKU == supplierProductBarcode.SKU))
+                    throw new Exception("No matching SKU found in catalogs");
+
+                if (!suppliers.Any(_ => _.ID == supplierProductBarcode.SupplierID))
+                    throw new Exception("No matching supplier ID in suppliers");
+            }
         }
 
         public Supplier InsertSupplier(Supplier newSupplier)
