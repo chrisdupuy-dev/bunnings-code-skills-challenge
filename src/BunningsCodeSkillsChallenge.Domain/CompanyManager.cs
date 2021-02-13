@@ -1,25 +1,25 @@
-﻿namespace BunningsCodeSkillsChallenge.Domain.Services
+﻿namespace BunningsCodeSkillsChallenge.Domain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Interfaces.Models;
     using Interfaces.Services;
     using Microsoft.Extensions.Logging;
-    using Models;
 
-    public class CompanyService : ICompanyService
+    public class CompanyManager : ICompanyManager
     {
         private readonly ILogger _logger;
 
-        private List<Company> _companies { get; }
+        private List<ICompany> _companies { get; }
 
-        public CompanyService(ILogger<CompanyService> logger)
+        public CompanyManager(ILogger<CompanyManager> logger)
         {
             _logger = logger;
-            _companies = new List<Company>();
+            _companies = new List<ICompany>();
         }
 
-        public Company AddCompany(Company company)
+        public ICompany AddCompany(ICompany company)
         {
             if (_companies.Contains(company))
                 throw new Exception("Company already exists");
@@ -32,7 +32,7 @@
             return company;
         }
 
-        public Company GetCompany(string name)
+        public ICompany GetCompany(string name)
         {
             var company = _companies.FirstOrDefault(_ => _.Name == name);
             if (company == null)
@@ -41,7 +41,7 @@
             return company;
         }
 
-        public IEnumerable<Company> GetAllCompanies()
+        public IEnumerable<ICompany> GetAllCompanies()
         {
             return _companies;
         }

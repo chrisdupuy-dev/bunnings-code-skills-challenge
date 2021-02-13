@@ -1,7 +1,9 @@
 ﻿namespace BunningsCodeSkillsChallenge.UnitTests
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Domain;
+    using Domain.Interfaces.Models;
     using Domain.Interfaces.Services;
     using Domain.Models;
     using Domain.Models.Entities;
@@ -12,7 +14,7 @@
     public class BunningsCodeSkillsChallengeApplicationTests
     {
         [Fact]
-        public void ImportCompany_WhenImporting_ShouldImportAndMergeCatalog()
+        public void ImportCompany_WhenImporting_ShouldImportAndUpdateCommonCatalog()
         {
             // Arrange
             var companyName = "A";
@@ -21,32 +23,35 @@
             var barcodesPath = "\\ppathToBarcodesathToSuppliers";
 
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
-            var mockProductService = new Mock<IProductService>();
+            var mockCatalogService = new Mock<ICatalogService>();
             var mockSupplierService = new Mock<ISupplierService>();
+            
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
 
-            var company = new Company(companyName, null, null, null);
-            var allCompanies = new List<Company> {company};
+            var allCompanies = new List<ICompany> { mockCompany.Object };
 
-            var mockCompanyService = new Mock<ICompanyService>();
+            var mockCompanyService = new Mock<ICompanyManager>();
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
             var mockImportExportService = new Mock<IImportExportService>();
             mockImportExportService.Setup(_ => _.ImportCompany(companyName, supplierPath, catalogPath, barcodesPath))
-                .Returns(company);
+                .Returns(mockCompany.Object);
 
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
-            mockMegaMergerService.Setup(_ => _.GetCommonCatalog(allCompanies))
-                .Returns(new CommonCatalog(null));
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
+            mockCommonCatalogService.Setup(_ => _.GetCommonCatalogs(allCompanies))
+                .Returns(Enumerable.Empty<CommonCatalog>());
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
             app.ImportCompany(companyName, supplierPath, catalogPath, barcodesPath);
 
             // Assert
             mockImportExportService.Verify(_ => _.ImportCompany(companyName, supplierPath, catalogPath, barcodesPath));
-            mockCompanyService.Verify(_ => _.AddCompany(company));
-            mockMegaMergerService.Verify(_ => _.GetCommonCatalog(allCompanies));
+            mockCompanyService.Verify(_ => _.AddCompany(mockCompany.Object));
+            mockCommonCatalogService.Verify(_ => _.GetCommonCatalogs(allCompanies));
+            mockCompany.Verify();
         }
 
         [Fact]
@@ -54,13 +59,13 @@
         {
             // Arrange
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
-            var mockCompanyService = new Mock<ICompanyService>();
-            var mockProductService = new Mock<IProductService>();
+            var mockCompanyService = new Mock<ICompanyManager>();
+            var mockCatalogService = new Mock<ICatalogService>();
             var mockSupplierService = new Mock<ISupplierService>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             var exportPath = "\\pathToExportTo";
 
@@ -68,7 +73,7 @@
             app.ExportCommonCatalog(exportPath);
 
             // Assert
-            mockImportExportService.Verify(_ => _.ExportCommonCatalog(It.IsAny<CommonCatalog>(), exportPath));
+            mockImportExportService.Verify(_ => _.ExportCommonCatalog(It.IsAny<IEnumerable<CommonCatalog>>(), exportPath));
         }
 
         [Fact]
@@ -81,32 +86,34 @@
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockSupplierService = new Mock<ISupplierService>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
 
-            var company = new Company(companyName, null, null, null);
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
 
-            var mockCompanyService = new Mock<ICompanyService>();
-            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(company);
+            var mockCompanyService = new Mock<ICompanyManager>();
+            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
 
             var newCatalog = new Catalog();
 
-            var mockProductService = new Mock<IProductService>();
-            mockProductService.Setup(_ => _.GetProduct(company, sku)).Returns(newCatalog);
+            var mockCatalogService = new Mock<ICatalogService>();
+            mockCatalogService.Setup(_ => _.GetCatalog(mockCompany.Object, sku)).Returns(newCatalog);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
-            var catalog = app.GetProduct(companyName, sku);
+            var catalog = app.GetCatalog(companyName, sku);
 
             // Assert
             Assert.Equal(newCatalog, catalog);
 
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockProductService.Verify(_ => _.GetProduct(company, sku));
+            mockCatalogService.Verify(_ => _.GetCatalog(mockCompany.Object, sku));
+            mockCompany.Verify();
         }
 
         [Fact]
-        public void AddNewProduct_WhenCompanyExists_ShouldAddProductAndMergeCatalog()
+        public void InsertCatalog_WhenCompanyExists_ShouldAddProductAndUpdateCommonCatalog()
         {
             // Arrange 
             var companyName = "A";
@@ -116,29 +123,31 @@
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockSupplierService = new Mock<ISupplierService>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
-            var mockProductService = new Mock<IProductService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
+            var mockCatalogService = new Mock<ICatalogService>();
 
-            var company = new Company(companyName, null, null, null);
-            var allCompanies = new List<Company> { company };
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
+            var allCompanies = new List<ICompany> { mockCompany.Object };
 
-            var mockCompanyService = new Mock<ICompanyService>();
-            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(company);
+            var mockCompanyService = new Mock<ICompanyManager>();
+            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
-            app.AddNewProduct(companyName, sku, description);
+            app.InsertCatalog(companyName, sku, description);
 
             // Assert
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockProductService.Verify(_ => _.AddProduct(company, sku, description));
-            mockMegaMergerService.Verify(_ => _.GetCommonCatalog(allCompanies));
+            mockCatalogService.Verify(_ => _.InsertCatalog(mockCompany.Object, sku, description));
+            mockCommonCatalogService.Verify(_ => _.GetCommonCatalogs(allCompanies));
+            mockCompany.Verify();
         }
 
         [Fact]
-        public void RemoveProduct_WhenCompanyExists_ShouldRemoveProductAndMergeCatalog()
+        public void DeleteCatalog_WhenCompanyExists_ShouldRemoveProductAndUpdateCommonCatalog()
         {
             // Arrange 
             var companyName = "A";
@@ -147,25 +156,27 @@
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockSupplierService = new Mock<ISupplierService>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
-            var mockProductService = new Mock<IProductService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
+            var mockCatalogService = new Mock<ICatalogService>();
 
-            var company = new Company(companyName, null, null, null);
-            var allCompanies = new List<Company> { company };
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
+            var allCompanies = new List<ICompany> { mockCompany.Object };
 
-            var mockCompanyService = new Mock<ICompanyService>();
-            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(company);
+            var mockCompanyService = new Mock<ICompanyManager>();
+            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
-            app.RemoveProduct(companyName, sku);
+            app.DeleteCatalog(companyName, sku);
 
             // Assert
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockProductService.Verify(_ => _.RemoveProduct(company, sku));
-            mockMegaMergerService.Verify(_ => _.GetCommonCatalog(allCompanies));
+            mockCatalogService.Verify(_ => _.DeleteCatalog(mockCompany.Object, sku));
+            mockCommonCatalogService.Verify(_ => _.GetCommonCatalogs(allCompanies));
+            mockCompany.Verify();
         }
 
         [Fact]
@@ -176,20 +187,21 @@
 
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
-            var mockProductService = new Mock<IProductService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
+            var mockCatalogService = new Mock<ICatalogService>();
 
-            var company = new Company(companyName, null, null, null);
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
 
-            var mockCompanyService = new Mock<ICompanyService>();
-            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(company);
+            var mockCompanyService = new Mock<ICompanyManager>();
+            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
 
             var existingSuppliers = new List<Supplier> {new Supplier()};
 
             var mockSupplierService = new Mock<ISupplierService>();
-            mockSupplierService.Setup(_ => _.GetSuppliers(company)).Returns(existingSuppliers);
+            mockSupplierService.Setup(_ => _.GetSuppliers(mockCompany.Object)).Returns(existingSuppliers);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
             var suppliers = app.GetSuppliers(companyName);
@@ -198,11 +210,12 @@
             Assert.Equal(existingSuppliers, suppliers);
 
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockSupplierService.Verify(_ => _.GetSuppliers(company));
+            mockSupplierService.Verify(_ => _.GetSuppliers(mockCompany.Object));
+            mockCompany.Verify();
         }
 
         [Fact]
-        public void AddSupplier_WhenCompanyExists_ShouldAddSupplier()
+        public void InsertSupplier_WhenCompanyExists_ShouldAddSupplier()
         {
             // Arrange 
             var companyName = "A";
@@ -210,33 +223,35 @@
 
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
-            var mockProductService = new Mock<IProductService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
+            var mockCatalogService = new Mock<ICatalogService>();
 
-            var company = new Company(companyName, null, null, null);
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
 
-            var mockCompanyService = new Mock<ICompanyService>();
-            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(company);
+            var mockCompanyService = new Mock<ICompanyManager>();
+            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
 
             var newSupplier = new Supplier();
 
             var mockSupplierService = new Mock<ISupplierService>();
-            mockSupplierService.Setup(_ => _.CreateSupplier(company, supplierName)).Returns(newSupplier);
+            mockSupplierService.Setup(_ => _.InsertSupplier(mockCompany.Object, supplierName)).Returns(newSupplier);
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
-            var supplierReturned = app.AddSupplier(companyName, supplierName);
+            var supplierReturned = app.InsertSupplier(companyName, supplierName);
 
             // Assert
             Assert.Equal(newSupplier, supplierReturned);
 
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockSupplierService.Verify(_ => _.CreateSupplier(company, supplierName));
+            mockSupplierService.Verify(_ => _.InsertSupplier(mockCompany.Object, supplierName));
+            mockCompany.Verify();
         }
 
         [Fact]
-        public void AddProductBarcodes_WhenCompanyExists_ShouldAddBarcodesToProductAndMergeCatalog()
+        public void InsertSupplierProductBarcodes_WhenCompanyExists_ShouldAddBarcodesToProductAndUpdateCommonCatalog()
         {
             // Arrange 
             var companyName = "A";
@@ -251,28 +266,30 @@
 
             var mockLogger = new Mock<ILogger<BunningsCodeSkillsChallengeApplication>>();
             var mockImportExportService = new Mock<IImportExportService>();
-            var mockMegaMergerService = new Mock<IMegaMergerService>();
+            var mockCommonCatalogService = new Mock<ICommonCatalogService>();
             var mockSupplierService = new Mock<ISupplierService>();
 
-            var company = new Company(companyName, null, null, null);
-            var allCompanies = new List<Company> { company };
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Name).Returns(companyName);
+            var allCompanies = new List<ICompany> { mockCompany.Object };
 
-            var mockCompanyService = new Mock<ICompanyService>();
-            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(company);
+            var mockCompanyService = new Mock<ICompanyManager>();
+            mockCompanyService.Setup(_ => _.GetCompany(companyName)).Returns(mockCompany.Object);
             mockCompanyService.Setup(_ => _.GetAllCompanies()).Returns(allCompanies);
 
-            var mockProductService = new Mock<IProductService>();
-            mockProductService.Setup(_ => _.AddBarcodesToProduct(company, supplierId, sku, barcodes));
+            var mockCatalogService = new Mock<ICatalogService>();
+            mockCatalogService.Setup(_ => _.InsertSupplierProductBarcodes(mockCompany.Object, supplierId, sku, barcodes));
 
-            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockMegaMergerService.Object, mockCompanyService.Object, mockProductService.Object, mockSupplierService.Object);
+            var app = new BunningsCodeSkillsChallengeApplication(mockLogger.Object, mockImportExportService.Object, mockCommonCatalogService.Object, mockCompanyService.Object, mockCatalogService.Object, mockSupplierService.Object);
 
             // Act
-            app.AddProductBarcodes(companyName, sku, supplierId, barcodes);
+            app.InsertSupplierProductBarcodes(companyName, sku, supplierId, barcodes);
 
             // Assert
             mockCompanyService.Verify(_ => _.GetCompany(companyName));
-            mockProductService.Verify(_ => _.AddBarcodesToProduct(company, supplierId, sku, barcodes));
-            mockMegaMergerService.Verify(_ => _.GetCommonCatalog(allCompanies));
+            mockCatalogService.Verify(_ => _.InsertSupplierProductBarcodes(mockCompany.Object, supplierId, sku, barcodes));
+            mockCommonCatalogService.Verify(_ => _.GetCommonCatalogs(allCompanies));
+            mockCompany.Verify();
         }
     }
 }

@@ -6,12 +6,12 @@
 
     public class CsvContextServiceTests
     {
-        private const string ValidSuppliersDataLocation = "./TestData/SuppliersA.csv";
-        private const string ValidCatalogDataLocation = "./TestData/CatalogA.csv";
-        private const string ValidBarcodesDataLocation = "./TestData/BarcodesA.csv";
+        private const string ValidSuppliersDataLocation = @".\TestData\SuppliersA.csv";
+        private const string ValidCatalogDataLocation = @".\TestData\CatalogA.csv";
+        private const string ValidBarcodesDataLocation = @".\TestData\BarcodesA.csv";
 
         [Fact]
-        public void ReadCompany_WhenGivenValidData_ShouldReadSuccessfully()
+        public void ImportCompany_WhenGivenValidData_ShouldReadSuccessfully()
         {
             // Arrange
             var csvContextService = new CsvImportExportService();

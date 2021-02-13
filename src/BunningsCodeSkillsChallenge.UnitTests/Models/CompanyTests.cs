@@ -66,5 +66,113 @@
             // Act & Assert
             Assert.Throws<Exception>(() => new Company("A", catalogs, supplierProductBarcodes, suppliers));
         }
+
+        [Fact]
+        public void InsertSupplierProductBarcode_WhenProductDoesNotExist_ShouldThrowException()
+        {
+            // Arrange
+            var supplierId = 1;
+
+            var supplierProductBarcode = new SupplierProductBarcode()
+            {
+                SKU = "123-abc-xyz",
+                Barcode = "X1111",
+                SupplierID = supplierId
+            };
+
+            var company = new Company("A", new List<Catalog>(),
+                new List<SupplierProductBarcode>(), new List<Supplier>() { new Supplier() { ID = supplierId } });
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => company.InsertSupplierProductBarcode(supplierProductBarcode));
+        }
+
+        [Fact]
+        public void InsertSupplierProductBarcode_WhenSupplierDoesNotExist_ShouldThrowException()
+        {
+            // Arrange
+            var sku = "123-abc-xyz";
+
+            var supplierProductBarcode = new SupplierProductBarcode()
+            {
+                SKU = sku,
+                Barcode = "X1111",
+                SupplierID = 1
+            };
+
+            var company = new Company("A", new List<Catalog>() { new Catalog() { SKU = sku } },
+                new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => company.InsertSupplierProductBarcode(supplierProductBarcode));
+        }
+
+        [Fact]
+        public void InsertCatalog_WhenProductWithExistingSkuAlreadyExists_ShouldThrowException()
+        {
+            // Arrange
+            var sku = "123-abc-xyz";
+            var description = "2x4 Timber";
+
+            var existingCatalog = new Catalog()
+            {
+                SKU = sku,
+                Description = "Some existing catalog"
+            };
+
+            var newCatalog = new Catalog()
+            {
+                SKU = sku,
+                Description = "Some new catalog"
+            };
+
+            var company = new Company("A", new List<Catalog>() { existingCatalog }, new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => company.InsertCatalog(newCatalog));
+        }
+
+        [Fact]
+        public void DeleteCatalog_WhenCatalogDoesNotExist_ShouldThrowException()
+        {
+            // Arrange
+            var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => company.DeleteCatalog("123-abc-789"));
+        }
+
+        [Fact]
+        public void DeleteCatalog_WhenSupplierProductBarcodeExists_ShouldThrowException()
+        {
+            // Arrange
+            var sku = "123-abc-789";
+
+            var catalog = new Catalog()
+            {
+                SKU = sku,
+                Description = "2x4 Timber"
+            };
+
+            var supplier = new Supplier()
+            {
+                ID = 1
+            };
+
+            var supplierProductBarcode = new SupplierProductBarcode()
+            {
+                SKU = sku,
+                Barcode = "X1111",
+                SupplierID = 1
+            };
+
+            var company = new Company("A", 
+                new List<Catalog>() { catalog }, 
+                new List<SupplierProductBarcode>() { supplierProductBarcode },
+                new List<Supplier>(){ supplier });
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => company.DeleteCatalog(sku));
+        }
     }
 }

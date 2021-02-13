@@ -5,13 +5,14 @@
     using System.IO;
     using System.Linq;
     using CsvHelper;
+    using Interfaces.Models;
     using Interfaces.Services;
     using Models;
     using Models.Entities;
 
     public class CsvImportExportService : IImportExportService
     {
-        public Company ImportCompany(string companyName, string suppliersLocation, string catalogsLocation, string supplierProductBarcodesLocation)
+        public ICompany ImportCompany(string companyName, string suppliersLocation, string catalogsLocation, string supplierProductBarcodesLocation)
         {
             var suppliers = Read<Supplier>(suppliersLocation);
             var supplierProductBarcodes = Read<SupplierProductBarcode>(supplierProductBarcodesLocation);
@@ -20,9 +21,9 @@
             return new Company(companyName, catalogs, supplierProductBarcodes, suppliers);
         }
 
-        public void ExportCommonCatalog(CommonCatalog commonCatalog, string destinationLocation)
+        public void ExportCommonCatalog(IEnumerable<CommonCatalog> commonCatalogs, string destinationLocation)
         {
-            Write<CommonCatalogItem>(destinationLocation, commonCatalog.CommonCatalogItems.OrderBy(_ => _.Description));
+            Write<CommonCatalog>(destinationLocation, commonCatalogs.OrderBy(_ => _.Description));
         }
 
         private List<T> Read<T>(string location)

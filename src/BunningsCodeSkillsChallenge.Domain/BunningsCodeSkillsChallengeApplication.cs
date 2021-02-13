@@ -12,100 +12,100 @@
     {
         private readonly ILogger _logger;
         private readonly IImportExportService _importExport;
-        private readonly IMegaMergerService _megaMergerService;
-        private readonly ICompanyService _companyService;
-        private readonly IProductService _productService;
+        private readonly ICommonCatalogService _commonCatalogService;
+        private readonly ICompanyManager _companyManager;
+        private readonly ICatalogService _catalogService;
         private readonly ISupplierService _supplierService;
 
-        private CommonCatalog _commonCatalog { get; set; }
+        private IEnumerable<CommonCatalog> _commonCatalogs { get; set; }
 
         public BunningsCodeSkillsChallengeApplication(ILogger<BunningsCodeSkillsChallengeApplication> logger, 
-            IImportExportService importExport, IMegaMergerService megaMergerService, ICompanyService companyService, IProductService productService, 
+            IImportExportService importExport, ICommonCatalogService commonCatalogService, ICompanyManager companyManager, ICatalogService catalogService, 
             ISupplierService supplierService)
         {
             _logger = logger;
             _importExport = importExport;
-            _megaMergerService = megaMergerService;
-            _companyService = companyService;
-            _productService = productService;
+            _commonCatalogService = commonCatalogService;
+            _companyManager = companyManager;
+            _catalogService = catalogService;
             _supplierService = supplierService;
-            _commonCatalog = new CommonCatalog(Enumerable.Empty<CommonCatalogItem>());
+            _commonCatalogs = Enumerable.Empty<CommonCatalog>();
         }
 
         public void ImportCompany(string name, string suppliersLocation, string catalogsLocation, string supplierProductBarcodesLocation)
         {
             var company = _importExport.ImportCompany(name, suppliersLocation, catalogsLocation, supplierProductBarcodesLocation);
             
-            _companyService.AddCompany(company);
+            _companyManager.AddCompany(company);
 
-            ReloadCommonCatalog();
+            ReloadCommonCatalogs();
         }
 
         public void ExportCommonCatalog(string exportLocation)
         {
-            _importExport.ExportCommonCatalog(_commonCatalog, exportLocation);
+            _importExport.ExportCommonCatalog(_commonCatalogs, exportLocation);
         }
 
-        public CommonCatalog GetCommonCatalog()
+        public IEnumerable<CommonCatalog> GetCommonCatalogs()
         {
-            return _commonCatalog;
+            return _commonCatalogs;
         }
 
-        public Catalog GetProduct(string companyName, string sku)
+        public Catalog GetCatalog(string companyName, string sku)
         {
-            var company = _companyService.GetCompany(companyName);
+            var company = _companyManager.GetCompany(companyName);
 
-            return _productService.GetProduct(company, sku);
+            return _catalogService.GetCatalog(company, sku);
         }
 
-        public Catalog AddNewProduct(string companyName, string sku, string description)
+        public Catalog InsertCatalog(string companyName, string sku, string description)
         {
-            var company = _companyService.GetCompany(companyName);
+            var company = _companyManager.GetCompany(companyName);
 
-            var productAdded = _productService.AddProduct(company, sku, description);
+            var productAdded = _catalogService.InsertCatalog(company, sku, description);
 
-            ReloadCommonCatalog();
+            ReloadCommonCatalogs();
 
             return productAdded;
         }
 
-        public void RemoveProduct(string companyName, string sku)
+        public void DeleteCatalog(string companyName, string sku)
         {
-            var company = _companyService.GetCompany(companyName);
+            var company = _companyManager.GetCompany(companyName);
 
-            _productService.RemoveProduct(company, sku);
+            _catalogService.DeleteCatalog(company, sku);
 
-            ReloadCommonCatalog();
+            ReloadCommonCatalogs();
         }
 
         public IEnumerable<Supplier> GetSuppliers(string companyName)
         {
-            var company = _companyService.GetCompany(companyName);
+            var company = _companyManager.GetCompany(companyName);
 
             return _supplierService.GetSuppliers(company);
         }
 
-        public Supplier AddSupplier(string companyName, string supplierName)
+        public Supplier InsertSupplier(string companyName, string supplierName)
         {
-            var company = _companyService.GetCompany(companyName);
+            var company = _companyManager.GetCompany(companyName);
 
-            return _supplierService.CreateSupplier(company, supplierName);
+            return _supplierService.InsertSupplier(company, supplierName);
         }
 
-        public IEnumerable<SupplierProductBarcode> AddProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
+        public IEnumerable<SupplierProductBarcode> InsertSupplierProductBarcodes(string companyName, string sku, int supplierId, IEnumerable<string> barcodes)
         {
-            var company = _companyService.GetCompany(companyName);
+            var company = _companyManager.GetCompany(companyName);
 
-            var barcodesAdded = _productService.AddBarcodesToProduct(company, supplierId, sku, barcodes);
+            var barcodesAdded = _catalogService.InsertSupplierProductBarcodes(company, supplierId, sku, barcodes);
 
-            ReloadCommonCatalog();
+            ReloadCommonCatalogs();
 
             return barcodesAdded;
         }
 
-        private void ReloadCommonCatalog()
+        private void ReloadCommonCatalogs()
         {
-            _commonCatalog = _megaMergerService.GetCommonCatalog(_companyService.GetAllCompanies());
+            _commonCatalogs = _commonCatalogService.GetCommonCatalogs(_companyManager.GetAllCompanies());
         }
     }
 }

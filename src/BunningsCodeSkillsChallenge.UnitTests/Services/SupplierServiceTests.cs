@@ -1,31 +1,39 @@
 ﻿namespace BunningsCodeSkillsChallenge.UnitTests.Services
 {
     using System.Collections.Generic;
-    using Domain.Models;
+    using Domain.Interfaces.Models;
     using Domain.Models.Entities;
     using Domain.Services;
+    using Moq;
     using Xunit;
 
     public class SupplierServiceTests
     {
         [Fact]
-        public void CreateSupplier_WhenValid_ShouldInsertSuccessfully()
+        public void InsertSupplier_WhenValid_ShouldInsertSuccessfully()
         {
             // Arrange
             var supplierName = "Bob the Builder";
-            var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), new List<Supplier>());
-            
+
+            var expectedSupplier = new Supplier()
+            {
+                ID = 1,
+                Name = supplierName
+            };
+
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.InsertSupplier(It.Is<Supplier>(s => s.Name == supplierName))).Returns(expectedSupplier);
+
             var supplierService = new SupplierService(null);
             
             // Act
-            var insertedSupplier = supplierService.CreateSupplier(company, supplierName);
+            var actualSupplier = supplierService.InsertSupplier(mockCompany.Object, supplierName);
 
             // Assert
-            Assert.NotNull(insertedSupplier);
-            Assert.Equal(1, insertedSupplier.ID);
-            Assert.Equal(supplierName, insertedSupplier.Name);
+            Assert.NotNull(actualSupplier);
+            Assert.Equal(expectedSupplier, actualSupplier);
 
-            Assert.Contains(insertedSupplier, company.Suppliers);
+            mockCompany.Verify();
         }
 
         [Fact]
@@ -33,12 +41,14 @@
         {
             // Arrange
             var expectedSuppliers = new List<Supplier>();
-            var company = new Company("A", new List<Catalog>(), new List<SupplierProductBarcode>(), expectedSuppliers);
+
+            var mockCompany = new Mock<ICompany>();
+            mockCompany.Setup(_ => _.Suppliers).Returns(expectedSuppliers);
 
             var supplierService = new SupplierService(null);
 
             // Act
-            var actualSuppliers = supplierService.GetSuppliers(company);
+            var actualSuppliers = supplierService.GetSuppliers(mockCompany.Object);
 
             // Assert
             Assert.Equal(expectedSuppliers, actualSuppliers);

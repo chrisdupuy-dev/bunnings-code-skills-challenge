@@ -3,11 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices.ComTypes;
-    using System.Text;
     using Entities;
+    using Interfaces.Models;
 
-    public class Company
+    public class Company : ICompany
     {
         public string Name { get; }
 
@@ -49,26 +48,42 @@
 
         public Catalog InsertCatalog(Catalog newCatalog)
         {
+            if (Catalogs.Any(_ => _.SKU == newCatalog.SKU))
+                throw new Exception("Product with this SKU already exists");
+
             Catalogs = Catalogs.Union(new[] { newCatalog });
 
             return newCatalog;
         }
 
-        public void RemoveCatalog(Catalog catalogToRemove)
+        public void DeleteCatalog(string sku)
         {
+            if (SupplierProductBarcodes.Any(_ => _.SKU == sku))
+                throw new Exception("Barcodes found for product");
+
+            var catalogToRemove = Catalogs.FirstOrDefault(_ => _.SKU == sku);
+            if (catalogToRemove == null)
+                throw new Exception("Product does not exist");
+
             Catalogs = Catalogs.Except(new[] { catalogToRemove });
         }
 
         public SupplierProductBarcode InsertSupplierProductBarcode(SupplierProductBarcode supplierProductBarcode)
         {
+            if (Suppliers.All(_ => _.ID != supplierProductBarcode.SupplierID))
+                throw new Exception("Supplier does not exist");
+
+            if (Catalogs.All(_ => _.SKU != supplierProductBarcode.SKU))
+                throw new Exception("Product does not exist");
+
             SupplierProductBarcodes = SupplierProductBarcodes.Union(new []{ supplierProductBarcode });
 
             return supplierProductBarcode;
         }
 
-        public void RemoveSupplierProductBarcodes(IEnumerable<SupplierProductBarcode> supplierProductBarcodes)
+        public void DeleteSupplierProductBarcodes(string sku)
         {
-            SupplierProductBarcodes = SupplierProductBarcodes.Except(supplierProductBarcodes);
+            SupplierProductBarcodes = SupplierProductBarcodes.Where(_ => _.SKU != sku);
         }
     }
 }

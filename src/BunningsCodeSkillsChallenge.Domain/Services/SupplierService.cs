@@ -1,9 +1,9 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Services
 {
     using System.Collections.Generic;
+    using Interfaces.Models;
     using Interfaces.Services;
     using Microsoft.Extensions.Logging;
-    using Models;
     using Models.Entities;
 
     public class SupplierService : ISupplierService
@@ -14,12 +14,12 @@
             _logger = logger;
         }
 
-        public IEnumerable<Supplier> GetSuppliers(Company company)
+        public IEnumerable<Supplier> GetSuppliers(ICompany company)
         {
             return company.Suppliers;
         }
 
-        public Supplier CreateSupplier(Company company, string name)
+        public Supplier InsertSupplier(ICompany company, string name)
         {
             var newSupplier = new Supplier()
             {

@@ -1,12 +1,12 @@
 ﻿namespace BunningsCodeSkillsChallenge.Domain.Interfaces.Services
 {
     using System.Collections.Generic;
+    using Domain.Models.Entities;
     using Models;
-    using Models.Entities;
 
     public interface ISupplierService
     {
-        Supplier CreateSupplier(Company company, string name);
-        IEnumerable<Supplier> GetSuppliers(Company company);
+        Supplier InsertSupplier(ICompany company, string name);
+        IEnumerable<Supplier> GetSuppliers(ICompany company);
     }
 }

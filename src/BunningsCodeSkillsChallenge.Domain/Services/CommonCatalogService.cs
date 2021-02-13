@@ -5,20 +5,21 @@
     using Models;
     using System.Collections.Generic;
     using System.Linq;
+    using Interfaces.Models;
     using Microsoft.Extensions.Logging;
 
-    public class MegaMergerService : IMegaMergerService
+    public class CommonCatalogService : ICommonCatalogService
     {
         private readonly ILogger _logger;
 
-        public MegaMergerService(ILogger<MegaMergerService> logger)
+        public CommonCatalogService(ILogger<CommonCatalogService> logger)
         {
             _logger = logger;
         }
 
-        public CommonCatalog GetCommonCatalog(IEnumerable<Company> companies)
+        public IEnumerable<CommonCatalog> GetCommonCatalogs(IEnumerable<ICompany> companies)
         {
-            var commonCatalogItems = new List<CommonCatalogItem>();
+            var commonCatalogItems = new List<CommonCatalog>();
             var skusTooIgnore = new HashSet<int>();
 
             foreach (var company in companies)
@@ -34,7 +35,7 @@
                         continue;
 
                     var description = company.Catalogs.First(_ => _.SKU == groupSupplierProductBarcode.Key).Description;
-                    commonCatalogItems.Add(new CommonCatalogItem(groupSupplierProductBarcode.Key, description, company.Name));
+                    commonCatalogItems.Add(new CommonCatalog(groupSupplierProductBarcode.Key, description, company.Name));
 
                     foreach (var barcode in groupSupplierProductBarcode.Select(_ => _.Barcode))
                     {
@@ -55,10 +56,10 @@
                 }
             }
 
-            return new CommonCatalog(commonCatalogItems);
+            return commonCatalogItems;
         }
 
-        private void CheckForConflictingSku(Company otherCompany, string sku, string barcode)
+        private void CheckForConflictingSku(ICompany otherCompany, string sku, string barcode)
         {
             var sameSkuBarcodes = otherCompany.SupplierProductBarcodes.Where(_ => _.SKU == sku);
             if (sameSkuBarcodes.Any() && !sameSkuBarcodes.Any(_ => _.Barcode == barcode))

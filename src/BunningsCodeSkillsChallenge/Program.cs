@@ -12,14 +12,14 @@
     public class Program
     {
         private const string CompanyAName = "A";
-        private const string SuppliersALocation = "./Input/SuppliersA.csv";
-        private const string CatalogALocation = "./Input/CatalogA.csv";
-        private const string BarcodesALocation = "./Input/BarcodesA.csv";
+        private const string SuppliersALocation = @".\Input\SuppliersA.csv";
+        private const string CatalogALocation = @".\Input\CatalogA.csv";
+        private const string BarcodesALocation = @".\Input\BarcodesA.csv";
 
         private const string CompanyBName = "B";
-        private const string SuppliersBLocation = "./Input/SuppliersB.csv";
-        private const string CatalogBLocation = "./Input/CatalogB.csv";
-        private const string BarcodesBLocation = "./Input/BarcodesB.csv";
+        private const string SuppliersBLocation = @".\Input\SuppliersB.csv";
+        private const string CatalogBLocation = @".\Input\CatalogB.csv";
+        private const string BarcodesBLocation = @".\Input\BarcodesB.csv";
 
         private static string[] DummyInput =
         {
@@ -57,13 +57,13 @@
                                 ExportCommonCatalog(app);
                                 break;
                             case '3':
-                                AddProduct(app);
+                                AddCatalog(app);
                                 break;
                             case '4':
-                                RemoveProduct(app);
+                                RemoveCatalog(app);
                                 break;
                             case '5':
-                                AddBarcodesForProduct(app);
+                                AddBarcodesForCatalog(app);
                                 break;
                             case '6':
                                 running = false;
@@ -86,9 +86,9 @@
             return serviceCollection
                 .AddLogging(c => c.AddConsole())
                 .AddScoped<IImportExportService, CsvImportExportService>()
-                .AddScoped<IMegaMergerService, MegaMergerService>()
-                .AddScoped<ICompanyService, CompanyService>()
-                .AddScoped<IProductService, ProductService>()
+                .AddScoped<ICommonCatalogService, CommonCatalogService>()
+                .AddTransient<ICompanyManager, CompanyManager>()
+                .AddScoped<ICatalogService, CatalogService>()
                 .AddScoped<ISupplierService, SupplierService>()
                 .AddTransient<IApplication, BunningsCodeSkillsChallengeApplication>()
                 .BuildServiceProvider();
@@ -98,11 +98,11 @@
         {
             Console.Clear();
             Console.WriteLine("Welcome to BAU Mode!\n");
-            Console.WriteLine("1. Display catalog");
-            Console.WriteLine("2. Export catalog");
-            Console.WriteLine("3. Add new product");
-            Console.WriteLine("4. Remove existing product");
-            Console.WriteLine("5. Add barcodes for product");
+            Console.WriteLine("1. Display common catalog");
+            Console.WriteLine("2. Export common catalog");
+            Console.WriteLine("3. Add new catalog to company");
+            Console.WriteLine("4. Remove existing catalog from company");
+            Console.WriteLine("5. Add barcodes for catalog");
             Console.WriteLine("6. Exit");
 
             return Console.ReadKey();
@@ -114,8 +114,8 @@
 
             Console.WriteLine("SKU - Description - Source");
 
-            var commonCatalog = app.GetCommonCatalog();
-            foreach (var commonCatalogItem in commonCatalog.CommonCatalogItems.OrderBy(_ => _.Description))
+            var commonCatalogs = app.GetCommonCatalogs();
+            foreach (var commonCatalogItem in commonCatalogs.OrderBy(_ => _.Description))
             {
                 Console.WriteLine($"{ commonCatalogItem.SKU } - {commonCatalogItem.Description} - {commonCatalogItem.Source}");
             }
@@ -137,7 +137,7 @@
             Console.ReadKey();
         }
 
-        private static void AddProduct(IApplication app)
+        private static void AddCatalog(IApplication app)
         {
             Console.Clear();
 
@@ -150,14 +150,14 @@
             Console.Write("Enter description: ");
             var description = Console.ReadLine();
 
-            app.AddNewProduct(companyName, sku, description);
+            app.InsertCatalog(companyName, sku, description);
 
             Console.WriteLine("Success!");
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
 
-        private static void RemoveProduct(IApplication app)
+        private static void RemoveCatalog(IApplication app)
         {
             Console.Clear();
 
@@ -167,14 +167,14 @@
             Console.Write("Enter SKU: ");
             var sku = Console.ReadLine();
 
-            app.RemoveProduct(companyName, sku);
+            app.DeleteCatalog(companyName, sku);
 
             Console.WriteLine("Success!");
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
 
-        private static void AddBarcodesForProduct(IApplication app)
+        private static void AddBarcodesForCatalog(IApplication app)
         {
             Console.Clear();
 
@@ -190,7 +190,7 @@
                 Console.Write("Enter supplier name: ");
                 var supplierName = Console.ReadLine();
 
-                supplierId = app.AddSupplier(companyName, supplierName).ID;
+                supplierId = app.InsertSupplier(companyName, supplierName).ID;
             }
             else
             {
@@ -211,7 +211,7 @@
             Console.Write("Enter barcodes (can be comma separated): ");
             var barcodes = Console.ReadLine().Split(',').Select(_ => _.Trim());
 
-            app.AddProductBarcodes(companyName, sku, supplierId, barcodes);
+            app.InsertSupplierProductBarcodes(companyName, sku, supplierId, barcodes);
 
             Console.WriteLine("Success!");
             Console.WriteLine("\nPress any key to continue...");
