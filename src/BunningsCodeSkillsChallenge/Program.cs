@@ -185,6 +185,8 @@
             Console.Write("Is this a new supplier (Y/N)?: ");
             var yesNo = Console.ReadKey();
 
+            Console.WriteLine("\n");
+
             int supplierId;
             if (yesNo.Key == ConsoleKey.Y)
             {
@@ -195,8 +197,6 @@
             }
             else
             {
-                Console.WriteLine("\n");
-
                 foreach (var supplier in app.GetSuppliers(companyName))
                 {
                     Console.WriteLine($"{supplier.ID}. {supplier.Name}");

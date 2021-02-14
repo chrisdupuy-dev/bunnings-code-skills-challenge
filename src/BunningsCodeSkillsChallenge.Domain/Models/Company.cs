@@ -51,7 +51,7 @@
         public Catalog InsertCatalog(Catalog newCatalog)
         {
             if (Catalogs.Any(_ => _.SKU == newCatalog.SKU))
-                throw new Exception("Product with this SKU already exists");
+                throw new Exception("This SKU already exists");
 
             Catalogs = Catalogs.Union(new[] { newCatalog });
 
@@ -65,7 +65,7 @@
 
             var catalogToRemove = Catalogs.FirstOrDefault(_ => _.SKU == sku);
             if (catalogToRemove == null)
-                throw new Exception("Product does not exist");
+                throw new Exception("SKU does not exist");
 
             Catalogs = Catalogs.Except(new[] { catalogToRemove });
         }
@@ -76,7 +76,7 @@
                 throw new Exception("Supplier does not exist");
 
             if (Catalogs.All(_ => _.SKU != supplierProductBarcode.SKU))
-                throw new Exception("Product does not exist");
+                throw new Exception("SKU does not exist");
 
             SupplierProductBarcodes = SupplierProductBarcodes.Union(new []{ supplierProductBarcode });
 

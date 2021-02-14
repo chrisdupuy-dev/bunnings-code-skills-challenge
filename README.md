@@ -25,17 +25,17 @@ Set **'BunningsCodeSkillsChallenge'** project as the start-up project and click 
 ## Running the app from command-line
 From the build_output directory (.\src\build_output\\{debug|release}\net5.0\\) if you wish to run the program with the provided test data simply run the following command:
 
-    .\BunningsCodeSkillsChallenge.exe
+    dotnet .\BunningsCodeSkillsChallenge.dll
 
 Or if you you wish to input your own data you may do the following command:
 
-    .\BunningsCodeSkillsChallenge.exe <CompanyName> <PathToSuppliersCsv> <PathToCatalogCsv> <PathToBarcodesCsv>
+    dotnet .\BunningsCodeSkillsChallenge.dll <CompanyName> <PathToSuppliersCsv> <PathToCatalogCsv> <PathToBarcodesCsv>
 
 *Note: Repeat the pattern of '\<CompanyName> \<PathToSuppliersCsv> \<PathToCatalogCsv> \<PathToBarcodesCsv>' to add additional companies*
 
 **Example**
 
-    .\BunningsCodeSkillsChallenge.exe CompanyA .\Input\suppliersA.csv .\Input\catalogA.csv .\Input\barcodesA.csv CompanyB .\Input\suppliersB.csv .\Input\catalogB.csv .\Input\barcodesB.csv 
+    dotnet BunningsCodeSkillsChallenge.dll A .\Input\suppliersA.csv .\Input\catalogA.csv .\Input\barcodesA.csv B .\Input\suppliersB.csv .\Input\catalogB.csv .\Input\barcodesB.csv 
 
 ## Design
 A basic command-line interface is used to facilate the use of various functions in the  'BunningsCodeSkillsChallengeApplication', this application class has all the services it requires to import, export and manipulate catalogs injected into it on construction. The data imported into the application is housed in a 'Company' where the company specific catalog is validated on any change to maintain data integrity, these 'Company' imports are then stored and maintained by the 'CompanyManger' for later reference.
@@ -51,12 +51,12 @@ Lastly the 'CommonCatalogService' is responsible for merging multiple companies 
 * Currently when a catalog is modified in the system the entire common catalog is reloaded, this could be optimised more to not reload the entire common catalog if not needed or to more intelligently add/remove single catalogs
 * I added logging to the application but did not make use of it anywhere as I did not think for the coding challenge it would add much value and it was more to show how logging could be fed into the system through dependency injection
 * Generic exceptions are currently thrown in error scenarios but I do not catch or handle these besides a 'catch all' in the console application itself just to stop it from crashing when an exception occurs, this could be improved with more time to handle specific scenarios better
-* User input and experience could be improved as it does not provide any pre-emptive input validation and only provides exiting back to the menu as a error recovery
+* User input and experience could be improved as it does not provide any pre-emptive input validation, everything is case-senstive and only provides exiting back to the menu as a error recovery
 
 ## Assumptions
-* Company names are unique
+* Company names must be unique
 * Only catalogs with barcodes available are to be shown in common catalog
 * SKUs must be unique within a Company
 * Both Catalog SKU and Supplier ID must exist for a SupplierProductBarcode to exist
-* If two companies have the same SKU but no matching barcodes I assume an unrecoverable conflict has occured and throw an exception
+* If two companies have the same SKU but no matching barcodes I assume an unrecoverable conflict has occured and throw an exception, this could easily be changed to "skip" that SKU though if needed
 * The order of the common catalog does not matter provided the data is the same, I sorted by description
