@@ -48,7 +48,7 @@ Lastly the 'CommonCatalogService' is responsible for merging multiple companies 
 
 ## Areas for improvement
 * Whilst the merging of catalogs is functional it could be done more efficiently, the values used in the HashSet to keep track of what catalogs have already been added to the system are also not collision safe
-* Currently when a catalog is modified in the system the entire common catalog is reloaded, this could be optimised more to not reload the entire common catalog if not needed or to more intelligently add/remove single catalogs
+* Currently when a catalog is modified in the system the entire common catalog is reloaded, this could be optimised more to not reload the entire common catalog if not needed or to more intelligently add/remove single catalogs through an event based system
 * I added logging to the application but did not make use of it anywhere as I did not think for the coding challenge it would add much value and it was more to show how logging could be fed into the system through dependency injection
 * Generic exceptions are currently thrown in error scenarios but I do not catch or handle these besides a 'catch all' in the console application itself just to stop it from crashing when an exception occurs, this could be improved with more time to handle specific scenarios better
 * User input and experience could be improved as it does not provide any pre-emptive input validation, everything is case-senstive and only provides exiting back to the menu as a error recovery
